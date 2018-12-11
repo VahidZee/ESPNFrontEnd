@@ -1,6 +1,6 @@
 <template>
     <div>
-        shithead
+        404
     </div>
 </template>
 
