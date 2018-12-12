@@ -1,6 +1,6 @@
 <template>
     <div>
-        <NewsList></NewsList>
+        <NewsList :auth="true" ></NewsList>
     </div>
 </template>
 

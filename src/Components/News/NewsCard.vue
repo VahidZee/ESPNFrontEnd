@@ -1,23 +1,23 @@
 <template>
-        <router-link tag="div" :to="'/news/' + newsId" class="newsCard" >
+        <router-link tag="div" :to="'/news/' + newsData.id" class="newsCard" >
             <sui-card class="raised link black" @mouseenter="mouseEnter" @mouseleave="mouseleave" >
-                <sui-image v-if="newsHasImage" :src="'https://picsum.photos/200/300?image=' + newsId"></sui-image>
-                <sui-card-content class="shit">
+                <sui-image v-if="newsData.image" :src="newsData.image"></sui-image>
+                <sui-card-content class="cardContent" :style="contentStyle">
                     <sui-card-header>
-                        {{newsTitle}}
-                        <sui-label v-if="newsIsSubscribed" class="right floated" size="tiny" color="black" >
+                        {{newsData.title}}
+                        <sui-label v-if="newsData.isSubscribed" class="right floated" size="tiny" color="black" >
                             Subscribed
                         </sui-label>
                     </sui-card-header>
-                    <sui-card-description>
-                        <p>{{newsDescription | crop(descriptionLength ,cropActive ) }}</p>
+                    <sui-card-description >
+                        <p>{{newsData.description | crop(descriptionLength ,cropActive ) }}</p>
                     </sui-card-description>
                 </sui-card-content>
                 <sui-card-content extra >
-                    Basketball
+                   {{newsData.sportType}}
                     <span slot="right" >
                         <sui-icon  name="calendar alternate outline icon" ></sui-icon>
-                        {{newsPublishDate  }}
+                        {{newsData.publishDate | formatDate }}
                     </span>
                 </sui-card-content>
             </sui-card>
@@ -30,14 +30,40 @@
         name: "NewsCard",
         data() {
             return {
-                descriptionLength : 100,
+                descriptionLength : (this.newsData.image) ? 200 : 610 ,
                 cropActive : true
             }
         },
-        props: [ 'news-id', 'news-title' , 'news-is-subscribed' , 'news-publish-date' , 'news-has-image' , 'news-description' ],
+        props: [ 'news-data' ],
         filters: {
             crop : function( value ,  len , active = true) {
                     return (value.length >len && active ) ? value.substr(0 , len) + ' . . .' : value;
+            },
+            formatDate( date ) {
+                let diff_date = new Date() - date ;
+                let seconds = Math.floor( diff_date / 1000 );
+                if( seconds ===0 )
+                    return 'now';
+                if( seconds < 60  )
+                    return seconds +'s';
+                let minutes = Math.floor( seconds / 60 );
+                if( minutes < 60  )
+                    return minutes + 'm';
+                let hours = Math.floor( minutes / 60 );
+                if( hours < 24  )
+                    return hours + 'h';
+                let days = Math.floor( hours / 24 );
+                if( days < 356  )
+                    return hours + 'd';
+                let years = Math.floor( days / 356 );
+                if( years < 356  )
+                    return years + 'y';
+            }
+        },
+        computed: {
+            contentStyle() {
+
+                return (!this.newsData.image) ? { 'height' : 350 + 'px' } : null;
             }
         },
         methods: {
@@ -46,8 +72,7 @@
             },
             mouseleave( ) {
                 this.cropActive = true;
-            }
-
+            },
         }
     }
 </script>
@@ -70,7 +95,7 @@
         color: #ffffff66
 
     }
-    .shit.content{
+    .cardContent.content{
         background-color: #ffffffaa;
         height: 150px;
 
@@ -80,7 +105,6 @@
         background-color: #111111ee;
         color: #ffffff55;
     }
-
     ::-webkit-scrollbar {
         width: 0px;  /* remove scrollbar space */
         background: transparent;  /* optional: just make scrollbar invisible */
