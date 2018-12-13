@@ -70,7 +70,7 @@
 
 <style>
     .cnt {
-        background-color: white;
+        background-color: rgba(256,256,256,0.4);
         border-style: solid;
         border-color: rgba(0, 0, 0, 0.25);
         padding: 1rem;

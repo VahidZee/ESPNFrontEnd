@@ -1,8 +1,19 @@
 <template>
-    <div>
-        <Timeline :events="events"></Timeline>
-        <PlayersTable :best-player="bestPlayer" :in-players="inPlayers" :save-players="savePlayers"></PlayersTable>
-        <EventTable :penalties="penalties" :corners="corners" :goals="goals" :goal-opp="goalOpp"></EventTable>
+    <div class="gameCnt">
+        <sui-grid :columns="3">
+        <sui-grid-row>
+            <sui-grid-column :width="4">
+                <Timeline :events="events"></Timeline>
+                <PlayersTable :best-player="bestPlayer" :in-players="inPlayers"
+                              :save-players="savePlayers"></PlayersTable>
+            </sui-grid-column>
+            <sui-grid-column :width="10">
+                <EventTable :penalties="penalties" :corners="corners" :goals="goals" :goal-opp="goalOpp"></EventTable>
+                <LiveReport></LiveReport>
+                <Multimedia></Multimedia>
+            </sui-grid-column>
+        </sui-grid-row>
+        </sui-grid>
     </div>
 </template>
 
@@ -11,21 +22,32 @@
     import EventTimeData from "../Components/Timeline/EventTimeData";
     import PlayersTable from "../Components/PlayersTable/PlayersTable";
     import EventTable from "../Components/EventTable/EventTable";
+    import LiveReport from "../Components/LiveReport/LiveReport";
+    import Multimedia from "../Components/Multimedia/Multimedia";
+    import SuiGridRow from "semantic-ui-vue/dist/commonjs/collections/Grid/GridRow";
+    import SuiGridColumn from "semantic-ui-vue/dist/commonjs/collections/Grid/GridColumn";
 
     export default {
         name: "GamePage",
 
         components: {
+            SuiGridColumn,
+            SuiGridRow,
+            Multimedia,
+            LiveReport,
             EventTable,
             Timeline,
             PlayersTable,
         },
 
         data() {
-            return{
+            return {
                 events: [
                     new EventTimeData("0:05", "penalty for folan team", "charand charand"),
-                    new EventTimeData("9:12", "things are weird", "hello hello hello")
+                    new EventTimeData("9:12", "things are weird", "hello hello hello"),
+                    new EventTimeData("21:12", "things are weird", "'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam consectetur explicabo facere facilis in inventore nihil quod temporibus velit? A accusamus ad consequuntur deserunt dolores harum reprehenderit! Eos, nostrum.'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam consectetur explicabo facere facilis in inventore nihil quod temporibus velit? A accusamus ad consequuntur deserunt dolores harum reprehenderit! Eos, nostrum.',',"),
+                    new EventTimeData("32:12", "things are weird", "hello hello hello"),
+                    new EventTimeData("41:12", "things are weird", "hello hello hello"),
                 ],
 
                 bestPlayer: new this.player("Best!!", "-"),
@@ -45,22 +67,22 @@
         },
 
         methods: {
-            player: function(name, subTime) {
+            player: function (name, subTime) {
                 this.name = name;
                 this.subTime = subTime
             },
 
-            evePen: function(type, time, team) {
-              this.typ = type;
-              this.time = time;
-              this.team = team;
+            evePen: function (type, time, team) {
+                this.typ = type;
+                this.time = time;
+                this.team = team;
             },
 
-            goal: function(team1, team2, scr1, scr2) {
+            goal: function (team1, team2, scr1, scr2) {
                 this.team1 = team1;
                 this.team2 = team2;
                 this.scr1 = scr1;
-                this.scr2= scr2
+                this.scr2 = scr2
             }
 
         }
@@ -68,4 +90,11 @@
 </script>
 
 <style scoped>
+    .gameCnt {
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        /*align-items: start;*/
+    }
 </style>

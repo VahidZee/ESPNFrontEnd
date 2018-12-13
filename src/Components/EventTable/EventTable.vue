@@ -1,7 +1,7 @@
 <template>
     <div class="cnt">
         Penalties
-        <sui-table color="red">
+        <sui-table color="red" inverted>
             <sui-table-header>
                 <sui-table-row>
                     <sui-table-header-cell>Penalties</sui-table-header-cell>
@@ -18,7 +18,7 @@
             </sui-table-body>
         </sui-table>
         Corners
-        <sui-table color="orange">
+        <sui-table color="orange" inverted>
             <sui-table-header>
                 <sui-table-row>
                     <sui-table-header-cell>Time</sui-table-header-cell>
@@ -33,7 +33,7 @@
             </sui-table-body>
         </sui-table>
         Goals
-        <sui-table color="green">
+        <sui-table color="yellow" inverted>
             <sui-table-header>
                 <sui-table-row>
                     <sui-table-header-cell>{{goals.team1}}</sui-table-header-cell>
@@ -48,7 +48,7 @@
             </sui-table-body>
         </sui-table>
         Goal Opportunities
-        <sui-table color="blue">
+        <sui-table color="olive" inverted>
             <sui-table-header>
                 <sui-table-row>
                     <sui-table-header-cell>{{goalOpp.team1}}</sui-table-header-cell>
