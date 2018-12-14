@@ -1,5 +1,8 @@
 <template>
     <div class="gameCnt">
+        <div style="margin: 0.5rem">
+            <h1 style="color: black; text-align: center;"> <span style="background-color: darkgrey; padding: 2px;">League Title</span></h1>
+        </div>
         <sui-grid :columns="2">
             <sui-grid-row>
                 <sui-grid-column :width="4">
@@ -7,14 +10,10 @@
                     <MatchTable background-image="url('/Images/bg3.jpeg')"></MatchTable>
                 </sui-grid-column>
                 <sui-grid-column :width="10">
-                    <!--<div style="margin: 5rem;" ></div>-->
                     <Tournament background-image="url('/Images/bg3.jpeg')"></Tournament>
                 </sui-grid-column>
             </sui-grid-row>
         </sui-grid>
-
-
-        <!--<Tournament background-image="url('/Images/bg15.png')"></Tournament>-->
     </div>
 </template>
 
@@ -25,7 +24,7 @@
     import MatchTable from "../Components/MatchTable/MatchTable";
     export default {
         name: "LeaguePage",
-        components: {MatchTable, Tournament, GameTable}
+        components: { MatchTable, Tournament, GameTable}
     }
 
 </script>

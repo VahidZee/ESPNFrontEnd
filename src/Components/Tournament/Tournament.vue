@@ -104,7 +104,6 @@
     .item p {
         padding: 20px;
         margin: 0;
-        /*background-color: #ff6700;*/
         background-color: rgba(59, 147, 255, 0.7);
         border-radius: 2rem;
     }

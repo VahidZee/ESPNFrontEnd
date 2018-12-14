@@ -1,22 +1,23 @@
 <template>
     <div class="cnt hor">
+        <div style="margin: 50px;"></div>
         <multicard img-link="https://picsum.photos/200/200/?random1" :data-img="dataImg" :content="true"></multicard>
         <multicard img-link="https://picsum.photos/200/200/?random2" :data-img="dataImg" :content="true"></multicard>
         <multicard img-link="https://picsum.photos/200/200/?random3" :content="false"></multicard>
         <multicard img-link="https://picsum.photos/200/200/?random4" :data-img="dataImg" :content="true"></multicard>
         <multicard img-link="https://picsum.photos/200/200/?random5" :content="false"></multicard>
         <multicard img-link="https://picsum.photos/200/200/?random6" :content="false"></multicard>
-        <!--<MultiVideo></MultiVideo>-->
+        <MultiVideo></MultiVideo>
     </div>
 </template>
 
 <script>
     import Multicard from "./Multicard";
-    // import MultiVideo from "./MultiVideo";
+    import MultiVideo from "./MultiVideo";
 
     export default {
         name: "Multimedia",
-        components: {Multicard},
+        components: {Multicard, MultiVideo},
         data() {
             return {
                 link: 'https://picsum.photos/200/200/?random',

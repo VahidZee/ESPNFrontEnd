@@ -1,6 +1,8 @@
 <template>
-    <p>
-        {{teamF}} <span style="border-style: dashed; border-radius: 50%; font-size: large; padding:1rem;">{{scoreF}}-{{scoreS}}</span> {{teamS}}
+    <p style="display: inline;">
+        <span>{{teamF}}
+            <span style="border-style: dashed; border-radius: 50%; font-size: large; padding:1rem;">{{scoreF}}-{{scoreS}}</span>
+            {{teamS}}</span>
     </p>
 </template>
 
