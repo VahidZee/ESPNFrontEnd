@@ -4,6 +4,7 @@ import PlayerPage from "@/Pages/PlayerPage";
 import TeamPage from "@/Pages/TeamPage";
 import NewsPage from "@/Pages/NewsPage";
 import PageNotFound from "@/Pages/PageNotFound";
+import LeaguePage from "@/Pages/LeaguePage";
 
 export const routes = [
     {
@@ -48,4 +49,11 @@ export const routes = [
             title: 'ESPN - News',
         }
     },
+    {
+        path: '/league',
+        component: LeaguePage,
+        meta: {
+            title: 'ESPN - Leagues'
+        }
+    }
 ];

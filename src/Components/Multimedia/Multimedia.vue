@@ -12,16 +12,11 @@
 
 <script>
     import Multicard from "./Multicard";
-    import MultiVideo from "./MultiVideo";
+    // import MultiVideo from "./MultiVideo";
 
     export default {
         name: "Multimedia",
-        components: {MultiVideo, Multicard},
-        methods: {
-            makeImage: function (n) {
-                return "https://picsum.photos/200/200/?random" + n
-            }
-        },
+        components: {Multicard},
         data() {
             return {
                 link: 'https://picsum.photos/200/200/?random',
