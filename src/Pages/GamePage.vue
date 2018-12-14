@@ -1,5 +1,5 @@
 <template>
-    <div class="gameCnt">
+    <div class="gameCnt" :style="backgroundHandle">
         <sui-grid :columns="3">
         <sui-grid-row>
             <sui-grid-column :width="4">
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-    import Timeline from "../Components/TimeLine/Timeline";
-    import EventTimeData from "../Components/TimeLine/EventTimeData";
     import PlayersTable from "../Components/PlayersTable/PlayersTable";
     import EventTable from "../Components/EventTable/EventTable";
     import LiveReport from "../Components/LiveReport/LiveReport";
     import Multimedia from "../Components/Multimedia/Multimedia";
+    import EventTimeData from "../Components/Timeline/EventTimeData.js"
+    import Timeline from "../Components/Timeline/Timeline"
 
     export default {
         name: "GamePage",
@@ -59,6 +59,20 @@
                 goals: new this.goal("Real Madrid", "Barcelona", "2", "1"),
 
                 goalOpp: new this.goal("Real Madrid", "Barcelona", "5", "3"),
+
+                backgroundImage: "url('/Images/bg12.jpeg')"
+            }
+        },
+
+        computed: {
+            backgroundHandle : function () {
+                return {
+                    backgroundImage : this.backgroundImage,
+                    backgroundAttachment : 'fixed',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                }
             }
         },
 

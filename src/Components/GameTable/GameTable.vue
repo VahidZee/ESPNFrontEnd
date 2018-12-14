@@ -1,5 +1,5 @@
 <template>
-    <div class="cnt">
+    <div class="cnt" :style="listStyle">
         <sui-table inverted>
             <sui-table-header>
                 <sui-table-row>
@@ -25,11 +25,28 @@
     export default {
         name: "GameTable",
         components: {TableRow},
+        props: {
+            'background-image' : String
+        },
+
         data() {
             return {
                 teams: [new GameTableData("Esteghlal", 30, 15), new GameTableData("Perspolis", 40, 16), new GameTableData("Sepahan", 15, 9)]
             }
         },
+
+        computed: {
+            listStyle : function () {
+                return {
+                    backgroundImage : this.backgroundImage,
+                    backgroundAttachment : 'fixed',
+                    backgroundSize: 'cover',
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: 'center'
+                }
+            }
+        },
+
         methods: {
             sortByName() {
                 return this.teams.sort((a, b) => {return ((a.teamName < b.teamName) ? -1 : 1)})
