@@ -8,7 +8,7 @@ import PageNotFound from "@/Pages/PageNotFound";
 export const routes = [
     {
         path: '*',
-        component: PageNotFound,
+        component: MainPage,
         meta: {
             title: 'ESPN - Main Page',
         }

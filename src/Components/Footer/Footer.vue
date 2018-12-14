@@ -12,9 +12,9 @@
 
 <style scoped>
     div{
-        background-color: black;
+        background-image: linear-gradient(  #00000033 , #000000ff , #000000ff  );
         width: 100vw;
-        height:100vh;
+        height:40vh;
 
     }
 </style>

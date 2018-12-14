@@ -1,7 +1,7 @@
 <template>
         <router-link tag="div" :to="'/news/' + newsData.id" class="newsCard" >
             <sui-card class="raised link black" @mouseenter="mouseEnter" @mouseleave="mouseleave" >
-                <sui-image v-if="newsData.image" :src="newsData.image"></sui-image>
+                <sui-image v-if="newsData.image" :src="newsData.image" style="width: 300px; height:200px"></sui-image>
                 <sui-card-content class="cardContent" :style="contentStyle">
                     <sui-card-header>
                         {{newsData.title}}
