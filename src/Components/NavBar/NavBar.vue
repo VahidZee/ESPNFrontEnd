@@ -141,7 +141,7 @@
         background-color: #00000099;
     }
     .page-title {
-        font-size: 4rem;
+        font-size: 3rem;
         color:lightgray;
         text-align: center;
         background-color: #00000055;
