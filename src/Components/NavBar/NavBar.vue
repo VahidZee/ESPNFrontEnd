@@ -1,10 +1,13 @@
 <template>
     <div id="main-nav-bar">
+        <div id="top-nav" >
+            <div class="back">
 
-
-        <sui-sidebar inverted class="inverted" animation="push"  width="wide" direction="left" >
-            <sui-menu-item>
-
+            </div>
+        </div>
+        <sui-sidebar  class="inverted" animation="push"  width="wide" direction="left" >
+            <sui-menu-item >
+                Home Page
             </sui-menu-item>
 
         </sui-sidebar>
@@ -14,21 +17,40 @@
 <script>
     import LoginSgnUp from '../SignInSignUp/SignInSignUp'
     import LoginSignUp from "@/Components/SignInSignUp/SignInSignUp";
+
     export default {
+
         name: "NavBar",
-        components: { LoginSignUp},
-        component : {
-            LoginSgnUp
+
+        props : {
+            'background-image' : {
+                type: String,
+            }
+        },
+
+        computed: {
+            backgroundStyle : function() {
+                return {
+                    backgroundImage: this.backgroundImage
+                }
+            }
         }
 
     }
 </script>
 
 <style scoped>
-    #main-nav-bar{
+    #top-nav{
         background-image: linear-gradient(   #000000ff , #00000033 );
         width: 100vw;
-        height:40vh;
+        height:20vh;
+
+    }
+    .back {
+        background-attachment : fixed;
+        background-size: cover;
+        background-repeat:  no-repeat;
+        background-position: center
     }
     .shit{
         background-color: black;
