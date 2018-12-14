@@ -4,6 +4,8 @@
             <!--<ProfilePlayer photo-n="url('/Photos/BG.jpg')" photo-p="url('Photos/profile.png')" name="LeBron James"></ProfilePlayer>-->
             <Stats></Stats>
             <PlayerNews news-image="url('Photos/news2.jpg')" name="Lionel Messi"></PlayerNews>
+            <div style="margin: 5rem"></div>
+            <NewsList title="Player News"></NewsList>
             <!--<PlayerNews news-image="url('Photos/news.jpg')" name="Lebron James"></PlayerNews>-->
     </div>
 </template>
@@ -13,9 +15,11 @@
     import ProfilePlayer from "../Components/ProfilePlayer/ProfilePlayer";
     import Stats from "../Components/Stats/Stats";
     import PlayerNews from "../Components/PlayerNews/PlayerNews";
+    import NewsList from "../Components/News/NewsList";
+    import Divider from "../Components/PageDivider/Divider";
     export default {
         name: "PlayerPage",
-        components: { PlayerNews, Stats, ProfilePlayer},
+        components: {NewsList, PlayerNews, Stats, ProfilePlayer},
         data() {
             return {
                 backgroundImage: "url('/Images/bg36.jpeg')"
