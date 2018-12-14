@@ -1,30 +1,45 @@
 <template>
-    <div>
+    <div class="back" :style="backgroundStyle" >
         <NewsList :auth="true" title="Global News" background-image="url('/Images/bg3.jpeg')"></NewsList>
-        <div class="partition"></div>
+        <Divider background-image="url('./Images/15.jpeg')" />
+
         <games-list title="Top Games" :auth="true" background-image="url('/Images/bg14.jpeg')"></games-list>
-        <div class="partition"></div>
     </div>
 </template>
 
 <script>
     import NewsList from "@/Components/News/NewsList";
     import GamesList from "@/Components/Games/GamesList";
+    import Divider from "@/Components/PageDivider/Divider";
     export default {
         name: "MainPage",
-        components: {GamesList, NewsList},
+        components: {Divider, GamesList, NewsList},
+        props : {
+            'background-image' : {
+                type: String,
+            }
+        },
         data() {
             return {
 
             }
         },
+        computed: {
+            backgroundStyle : function() {
+                return {
+                    backgroundImage: this.backgroundImage
+                }
+            }
+        }
 
     }
 </script>
 
 <style scoped>
-    .partition{
-        background-image: linear-gradient(180deg ,  #000000ff , #00000033 );
-        height:30vh;
+    .back {
+        background-attachment : fixed;
+        background-size: cover;
+        background-repeat:  no-repeat;
+        background-position: center
     }
 </style>
