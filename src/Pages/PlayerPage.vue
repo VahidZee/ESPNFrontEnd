@@ -18,7 +18,7 @@
         components: { PlayerNews, Stats, ProfilePlayer},
         data() {
             return {
-                backgroundImage: "url('/Images/bg12.jpeg')"
+                backgroundImage: "url('/Images/bg36.jpeg')"
             }
         },
 

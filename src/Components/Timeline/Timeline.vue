@@ -37,7 +37,6 @@
         left: 29px;
         width: 2px;
         height: 100%;
-        z-index: 400;
     }
 
     ul.timeline > li {
@@ -55,7 +54,6 @@
         left: 20px;
         width: 20px;
         height: 20px;
-        z-index: 400;
     }
 
 </style>

@@ -33,6 +33,7 @@
     .gameCnt {
         /*background: url('Images/bg3.jpeg');*/
         background-color: black;
+        /*background-color: rgba(0, 0, 0, 1);*/
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
