@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-    <nav-bar></nav-bar>
+    <nav-bar background-image="url('./Images/bg36.jpeg')"></nav-bar>
     <router-view></router-view>
-    <Footer></Footer>
+    <Footer background-image="url('./Images/bg36.jpeg')" ></Footer>
   </div>
 </template>
 
