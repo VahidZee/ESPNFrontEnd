@@ -20,6 +20,10 @@
             height : {
                 type : String,
                 default: '30vh'
+            },
+            type : {
+                type : String,
+                default : 'middle'
             }
         },
         computed:{
@@ -34,7 +38,10 @@
                 return {
                     width : this.width,
                     height : this.height,
-
+                    backgroundImage:
+                        ( this.type === 'top' ) ? 'linear-gradient(   #000000ff , #00000033 ,  #00000000 )'
+                            : ( this.type === 'middle' ) ? 'linear-gradient(   #000000ff , #00000033 ,  #00000000 , #00000033 , #000000ff )'
+                            : 'linear-gradient(  #00000000 , #00000033 ,  #000000ff    )',
                 }
             }
         }
@@ -49,7 +56,6 @@
         background-position: center
     }
     .divider-fore{
-        background-image: linear-gradient(   #000000ff , #00000033 ,  #00000000 );
-
+        ;
     }
 </style>
