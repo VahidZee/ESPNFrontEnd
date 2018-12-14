@@ -1,7 +1,7 @@
 <template>
     <div id="main-nav-bar">
-        <div id="top-nav" >
-            <div class="back">
+        <div class="back"  :style="backgroundStyle">
+            <div class="fore">
 
             </div>
         </div>
@@ -40,19 +40,18 @@
 </script>
 
 <style scoped>
-    #top-nav{
+    .fore{
         background-image: linear-gradient(   #000000ff , #00000033 );
         width: 100vw;
-        height:20vh;
-
+        height:40vh;
     }
     .back {
         background-attachment : fixed;
         background-size: cover;
         background-repeat:  no-repeat;
         background-position: center
+
+
     }
-    .shit{
-        background-color: black;
-    }
+
 </style>

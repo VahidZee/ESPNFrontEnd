@@ -40,7 +40,7 @@
                     height : this.height,
                     backgroundImage:
                         ( this.type === 'top' ) ? 'linear-gradient(   #000000ff , #00000033 ,  #00000000 )'
-                            : ( this.type === 'middle' ) ? 'linear-gradient(   #000000ff , #00000033 ,  #00000000 , #00000033 , #000000ff )'
+                            : ( this.type === 'middle' ) ? 'linear-gradient( #000000dd ,  #00000099 , #00000000 ,  #00000000 , #00000000 ,  #00000099 , #000000dd )'
                             : 'linear-gradient(  #00000000 , #00000033 ,  #000000ff    )',
                 }
             }

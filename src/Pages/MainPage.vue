@@ -1,7 +1,7 @@
 <template>
     <div class="back" :style="backgroundStyle" >
-        <NewsList :auth="true" title="Global News" background-image="url('/Images/bg3.jpeg')"></NewsList>
-        <Divider background-image="url('./Images/bg14.jpeg')" />
+        <NewsList :auth="true" title="Global News" background-image="url('/Images/bg29.jpeg')"></NewsList>
+        <Divider height="30vh" background-image="url('./Images/bg21.jpeg')" />
 
         <games-list title="Top Games" :auth="true" background-image="url('/Images/bg14.jpeg')"></games-list>
     </div>
