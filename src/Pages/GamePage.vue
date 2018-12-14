@@ -18,21 +18,17 @@
 </template>
 
 <script>
-    import Timeline from "../Components/Timeline/Timeline";
-    import EventTimeData from "../Components/Timeline/EventTimeData";
+    import Timeline from "../Components/TimeLine/Timeline";
+    import EventTimeData from "../Components/TimeLine/EventTimeData";
     import PlayersTable from "../Components/PlayersTable/PlayersTable";
     import EventTable from "../Components/EventTable/EventTable";
     import LiveReport from "../Components/LiveReport/LiveReport";
     import Multimedia from "../Components/Multimedia/Multimedia";
-    import SuiGridRow from "semantic-ui-vue/dist/commonjs/collections/Grid/GridRow";
-    import SuiGridColumn from "semantic-ui-vue/dist/commonjs/collections/Grid/GridColumn";
 
     export default {
         name: "GamePage",
 
         components: {
-            SuiGridColumn,
-            SuiGridRow,
             Multimedia,
             LiveReport,
             EventTable,

@@ -1,11 +1,11 @@
 <template>
         <div class="newsList" :style="listStyle">
-            <sui-menu class="controlBar" inverted vertical >
+            <sui-menu class="controlBar" inverted vertical floated>
                 <sui-menu-item class="controlBarHeader" header>
-                    {{(title ) ? title : 'News'}}
+                    {{ title }}
                 </sui-menu-item>
                 <sui-menu-item
-                        v-for="(item, itemKey) in controllers"
+                        v-for="(item, itemKey) in controlOptions"
                         :key="'controlItem' +itemKey"
                         @click="selectControl(item)"
                         :active="isActive(item)"
@@ -14,11 +14,12 @@
                     {{item}}
                 </sui-menu-item>
                 <sui-dropdown
-                              text="Filter"
-                              item
-                              labeled
-                              v-model="activeFilter"
-                              :options="filterControls"
+                        v-show="filterOptions"
+                        text="Filter"
+                        item
+                        labeled
+                        v-model="activeFilter"
+                        :options="filterOptions"
                 >
                 </sui-dropdown>
             </sui-menu>
@@ -40,33 +41,59 @@
     export default {
         name: "NewsList",
         components: { NewsCard},
-        props : ['background-image' , 'title' , 'control-items' , 'default-active' , 'filterItems' , 'auth'],
-        x : 1,
+        props : {
+                'background-image' : {
+                    type : String,
+                    default : 'radial-gradient(#00002299 , #222222cc)'
+                } ,
+                'title' : {
+                    type : String,
+                    required : true
+                } ,
+                'control-options' : {
+                    type : Array,
+                    default : () => {
+                        return ['Recent' ,'Subscribed' ];
+                    }
+                } ,
+                'default-active' : {
+                    type: String,
+                    default : 'Recent'
+                } ,
+                'filter-options' : {
+                    type : Array,
+                    default: () => {
+                        return [
+                            {
+                                key : "All",
+                                text : "All",
+                                value: null
+                            },
+                            {
+                                key : "Basketball",
+                                text : "Basketball",
+                                icon : "basketball ball",
+                                value: "Basketball"
+                            },
+                            {
+                                key : "Football",
+                                text : "Football",
+                                icon : "futbol",
+                                value: "Football"
+                            }
+                        ]
+                    }
+
+                } ,
+                'auth' : {
+                    type: Boolean,
+                    default: false
+                }
+            } ,
         data() {
             return {
                 lorem: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam consectetur explicabo facere facilis in inventore nihil quod temporibus velit? A accusamus ad consequuntur deserunt dolores harum reprehenderit! Eos, nostrum.\n',
-                defaultControllers: ['Recent' ,'Subscribed' ],
-                activeControl : (this.defaultActive) ? this.defaultActive : 'Recent',
-                defaultFilterItems : [
-                    {
-                        key : "All",
-                        text : "All",
-                        value: null
-                    },
-                    {
-                        key : "Basketball",
-                        text : "Basketball",
-                        icon : "basketball ball",
-                        value: "Basketball"
-                    },
-                    {
-                        key : "Football",
-                        text : "Football",
-                        icon : "futbol",
-                        value: "Football"
-                    }
-
-                ],
+                activeControl : this.defaultActive,
                 activeFilter: null,
                 posts: []
             }
@@ -74,19 +101,11 @@
 
         //Computed Methods
         computed: {
-            //Filterings
-            filterControls: function () {
-                return this.filterItems ? this.filterItems : this.defaultFilterItems ;
-            },
-            //Contollings
-            controllers : function() {
-                return ( this.controlItesm ) ? this.controlItems : this.defaultControllers;
-            },
             listStyle : function () {
                 return {
-                    backgroundImage : (this.backgroundImage)? 'url(' + this.backgroundImage + ')' : 'radial-gradient(#00002299 , #222222bb)',
+                    backgroundImage : this.backgroundImage,
                     backgroundAttachment : 'fixed',
-                    backgroundSize: 'contain',
+                    backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
                 }
@@ -104,7 +123,7 @@
                     title : ('Title ' + value),
                     isSubscribed: (value % 6 === 0 || value % 6 === 2 || value % 7 === 6 ),
                     sportType: (!((value % 7 === 0 || value % 7 === 2 || value % 7 === 6 ))) ? 'Basketball' : 'Football',
-                    image: (value % 7 === 1 || value % 7 === 4)? 'https://picsum.photos/200/200/?random' + value : ''
+                    image: (value % 7 === 1 || value % 7 === 4)? 'https://picsum.photos/300/200/?random' + value : ''
                 }
             },
 
@@ -121,7 +140,7 @@
             },
             //Data Fetching
             getNews() {
-                for( let i = 1 ; i < 10 ; i++ )
+                for( let i = 1 ; i < 100  ; i++ )
                     this.posts.push( this.generateData(i));
             },
 
@@ -146,7 +165,7 @@
 
 <style scoped>
     .newsList {
-        min-height: 400px;
+        min-height: 850px;
         max-height: 80vh;
         display: flex;
         flex-direction: row;
@@ -187,7 +206,6 @@
         flex-direction: column;
         flex-wrap: nowrap;
         align-items: center;
-
     }
 
 

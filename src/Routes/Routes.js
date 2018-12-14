@@ -9,7 +9,7 @@ import LeaguePage from "@/Pages/LeaguePage";
 export const routes = [
     {
         path: '*',
-        component: PageNotFound,
+        component: MainPage,
         meta: {
             title: 'ESPN - Main Page',
         }
