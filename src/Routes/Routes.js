@@ -3,7 +3,6 @@ import GamePage from "@/Pages/GamePage";
 import PlayerPage from "@/Pages/PlayerPage";
 import TeamPage from "@/Pages/TeamPage";
 import NewsPage from "@/Pages/NewsPage";
-import PageNotFound from "@/Pages/PageNotFound";
 import LeaguePage from "@/Pages/LeaguePage";
 import LeaguesPage from "@/Pages/LeaguesPage";
 
@@ -44,7 +43,14 @@ export const routes = [
         }
     },
     {
-        path: '/news',
+        path: '/news' ,
+        component: NewsPage,
+        meta: {
+            title: 'ESPN - News',
+        }
+    },
+    {
+        path: '/news/:id' ,
         component: NewsPage,
         meta: {
             title: 'ESPN - News',

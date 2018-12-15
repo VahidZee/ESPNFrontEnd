@@ -4,6 +4,8 @@
         <Divider height="30vh" background-image="url('./Images/bg21.jpeg')" />
 
         <games-list title="Top Games" :auth="true" background-image="url('/Images/bg14.jpeg')"></games-list>
+        <Divider type="down" height="10vh" background-image="url('./Images/bg14.jpeg')" />
+
     </div>
 </template>
 

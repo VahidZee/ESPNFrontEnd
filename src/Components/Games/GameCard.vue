@@ -42,11 +42,10 @@
 </template>
 
 <script>
-    import SuiCardContent from "semantic-ui-vue/dist/commonjs/views/Card/CardContent";
     export default {
 
         name: "gameCard",
-        components: {SuiCardContent},
+        components: {},
         data() {
             return {
                 descriptionLength : (this.gameData.image) ? 200 : 610 ,

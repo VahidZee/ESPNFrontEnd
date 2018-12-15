@@ -30,7 +30,7 @@
         name: "NewsCard",
         data() {
             return {
-                descriptionLength : (this.newsData.image) ? 200 : 610 ,
+                descriptionLength : (this.newsData.image) ? 130 : 560 ,
                 cropActive : true
             }
         },

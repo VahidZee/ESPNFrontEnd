@@ -26,7 +26,7 @@
             <div class="sidebar-back">
                 <div class="sidebar-header">
                     ESPN REBORN
-                    <sui-button @click="sideBarActive = false" size="huge" color="black" icon="close window"/>
+                    <sui-button @click="sideBarActive = false" size="tiny"  icon="close"/>
                 </div>
 
                     <sui-button v-for="(item , i) in sidebarLinks" :key="'sidebar-item' + i" color="black">
