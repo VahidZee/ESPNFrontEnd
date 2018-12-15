@@ -22,6 +22,20 @@ export const routes = [
         }
     },
     {
+        path: '/games/:id',
+        component: GamePage,
+        meta: {
+            title: 'ESPN - Games',
+        }
+    },
+    {
+        path: '/game/:id',
+        component: GamePage,
+        meta: {
+            title: 'ESPN - Games',
+        }
+    },
+    {
         path: '/game',
         component: GamePage,
         meta: {
@@ -37,6 +51,27 @@ export const routes = [
     },
     {
         path: '/team',
+        component: TeamPage,
+        meta: {
+            title: 'ESPN - Teams',
+        }
+    },
+    {
+        path: '/teams',
+        component: TeamPage,
+        meta: {
+            title: 'ESPN - Teams',
+        }
+    },
+    {
+        path: '/team/:id',
+        component: TeamPage,
+        meta: {
+            title: 'ESPN - Teams',
+        }
+    },
+    {
+        path: '/teams/:id',
         component: TeamPage,
         meta: {
             title: 'ESPN - Teams',

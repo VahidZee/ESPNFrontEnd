@@ -40,8 +40,6 @@
                     </sui-menu-item>
                 </sui-button>
             </div>
-
-
         </sui-sidebar>
     </div>
 </template>

@@ -10,7 +10,7 @@
                 </sui-table-row>
             </sui-table-header>
             <sui-table-body>
-                <sui-table-row v-for="penalty in penalties" :key="penalty">
+                <sui-table-row v-for="(penalty , i) in penalties" :key="'penalty' + i">
                     <sui-table-cell>{{penalty.typ}}</sui-table-cell>
                     <sui-table-cell>{{penalty.time}}</sui-table-cell>
                     <sui-table-cell>{{penalty.team}}</sui-table-cell>
@@ -26,7 +26,7 @@
                 </sui-table-row>
             </sui-table-header>
             <sui-table-body>
-                <sui-table-row v-for="corner in corners" :key="corner">
+                <sui-table-row v-for="(corner , i) in corners" :key="'shit' + i">
                     <sui-table-cell>{{corner.time}}</sui-table-cell>
                     <sui-table-cell>{{corner.team}}</sui-table-cell>
                 </sui-table-row>

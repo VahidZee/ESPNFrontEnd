@@ -1,7 +1,7 @@
 <template>
-    <router-link tag="div" :to="'/games/' + gameData.id" class="gameCard" >
-        <sui-card class="raised link viewPort" @mouseenter="mouseEnter" @mouseleave="mouseleave" >
-            <sui-image  :src="gameData.team1.logo" style="width: 150px; height:150px" circular></sui-image>
+    <router-link v-if="isLink" tag="div" :to="'/games/' + gameData.id" class="gameCard" >
+        <sui-card class="raised link viewPort islink" @mouseenter="mouseEnter" @mouseleave="mouseleave" >
+            <sui-image  :src="gameData.team1.logo" style="width: 150px; height:150px" circular class="logo-image"></sui-image>
             <sui-card class="info">
                 <sui-card-content  extra>
                     {{gameData.type}}
@@ -35,10 +35,48 @@
                 </sui-card-content>
             </sui-card>
 
-            <sui-image  :src="gameData.team2.logo" style="width: 150px; height:150px" circular></sui-image>
+            <sui-image  :src="gameData.team2.logo" style="width: 150px; height:150px" circular class="logo-image"></sui-image>
 
         </sui-card>
     </router-link>
+    <sui-card v-else class="viewPort not-link" @mouseenter="mouseEnter" @mouseleave="mouseleave" >
+        <sui-image  :src="gameData.team1.logo" style="width: 150px; height:150px" circular></sui-image>
+        <sui-card class="info">
+            <sui-card-content  extra>
+                {{gameData.type}}
+                <span slot="right" v-show="gameData.isSubscribed" >
+                        Subscribed
+                    </span>
+            </sui-card-content>
+            <sui-card-content class="data" >
+                <div class="data-item">
+                    <div>{{gameData.team1.name}}</div>
+                    <div class="data-score">{{!(gameData.state === 'Upcomming' ) ? gameData.team1.score : '-'}}</div>
+                </div>
+                <div class="data-item">
+                    <span class="data-score">-</span>
+                </div>
+                <div class="data-item">
+                    <div>{{gameData.team2.name}}</div>
+                    <div class="data-score">{{ !(gameData.state === 'Upcomming' ) ? gameData.team2.score : '-'}}</div>
+                </div>
+                <div class="data-item">
+                    {{gameData.state}}
+                </div>
+            </sui-card-content>
+
+            <sui-card-content extra >
+                {{gameData.sportType}}
+                <span slot="right" >
+                        <sui-icon shape="circular" name="calendar alternate outline icon" ></sui-icon>
+                        {{gameData.date | formatDate}}
+                    </span>
+            </sui-card-content>
+        </sui-card>
+
+        <sui-image  :src="gameData.team2.logo" style="width: 150px; height:150px" circular></sui-image>
+
+    </sui-card>
 </template>
 
 <script>
@@ -52,7 +90,17 @@
                 cropActive : true
             }
         },
-        props: [ 'game-data' ],
+        props:  {
+            'game-data' : {
+                type:Object,
+                required:true
+            },
+            isLink : {
+                type : Boolean,
+                default: true
+            }
+
+        } ,
         filters: {
             crop : function( value ,  len , active = true) {
                 return (value.length >len && active ) ? value.substr(0 , len) + ' . . .' : value;
@@ -130,10 +178,15 @@
     }
     .card {
         border:none;
+        border-radius: 0px;
+        box-shadow: none;
         background-color: #ffffff55;
         transition:0.3s ease-in-out;
     }
-    .card:hover {
+    .card:hover{
+        border:none;
+        border-radius: 0px;
+        box-shadow: none;
         background-color:#ffffffee;
     }
 
@@ -149,12 +202,33 @@
         overflow-y: scroll;
     }
     .card:hover .content.extra{
+
         background-color: #111111ee;
         color: #ffffff55;
     }
     ::-webkit-scrollbar {
         width: 0px;  /* remove scrollbar space */
         background: transparent;  /* optional: just make scrollbar invisible */
+    }
+    .card:not(.islink) .content.extra:not(.islink){
+        background-color: #111111ee;
+        color: #ffffff55;
+        border:none;
+        border-radius: 0px;
+        box-shadow: none;
+    }
+    .card:not(.islink), .card:not(.islink):hover{
+        background-color: #000000aa;
+        color: #ffffffbb;
+        border:none;
+        border-radius: 0px;
+        box-shadow: none;
+    }
+    .logo-image{
+        border:none;
+        border-radius: 0px;
+        box-shadow: none;
+        background-color: transparent;
     }
 
 </style>

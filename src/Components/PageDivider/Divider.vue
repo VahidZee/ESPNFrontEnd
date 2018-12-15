@@ -53,9 +53,10 @@
         background-attachment : fixed;
         background-size: cover;
         background-repeat:  no-repeat;
-        background-position: center
+        background-position: center;
+        margin: 0;
     }
     .divider-fore{
-        ;
+        margin: 0;
     }
 </style>

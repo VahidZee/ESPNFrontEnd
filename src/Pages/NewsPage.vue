@@ -1,17 +1,6 @@
-<!--<template>-->
-    <!--<div>-->
-        <!---->
-    <!--</div>-->
-<!--</template>-->
 
-
-
-<!--<style scoped>-->
-
-<!--</style>-->
 <template>
     <div>
-        <!--<divider height="20vh" type="down" :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"/>-->
         <div  class="content-container ">
             <sui-container text>
                 <div >
@@ -26,11 +15,7 @@
                             Subscribed
                         </sui-label>
                     </span>
-
                 </div>
-
-
-
             </sui-container>
         </div>
         <div  class="content-container content-header">
@@ -68,7 +53,6 @@
                     @sliding-end="onSlideEnd"
         >
 
-            <!-- Text slides with image -->
             <b-carousel-slide
                     v-for="(image , i) in newsData.images"
                     :key="'image' + i"
@@ -260,4 +244,5 @@
     .content-header-info{
         float: right;
     }
+
 </style>
