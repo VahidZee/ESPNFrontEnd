@@ -36,7 +36,7 @@
             <divider
                     v-show="newsData.images.length"
                     height="2vh"
-                    :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"
+                    :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
             <b-carousel
                     v-show="newsData.images.length"
@@ -63,7 +63,7 @@
             </b-carousel>
             <divider
                     height="4vh"
-                    :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"
+                    :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
             <div class="content-container" >
                 <sui-container text>
@@ -75,7 +75,9 @@
                     </p>
                 </sui-container>
             </div>
-            <divider height="2vh" :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"/>
+            <divider height="2vh"
+                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+            />
             <div  class="content-container content-header">
                 <sui-container text v-show="newsData.tags.length">
                 <span  >
@@ -91,14 +93,23 @@
                     </a>
                 </sui-container>
             </div>
-            <divider  height="2vh" :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"/>
+            <divider  height="2vh" :background-image="this.newsData.backgroundImage"/>
 
             <comments-list></comments-list>
-            <divider type="top" height="2vh" :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"/>
+            <divider type="top" height="2vh"
+                     ::background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+            />
 
-            <news-list  title="Related News" :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"  :related="newsData.tags"></news-list>
+            <news-list  title="Related News"
+                        :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+                        :related="newsData.tags"
+            ></news-list>
 
-            <divider type="down" height="2vh" :background-image="'url(\'../Images/bg' + ( newsData.id * 100 ) % 49 + '.jpeg\')'"/>
+            <divider
+                    type="down"
+                    height="2vh"
+                    :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+            />
         </div>
     </div>
 </template>
@@ -172,7 +183,7 @@
             },
             //Fetching Data
             fetchData() {
-                console.log(this.$route.params.id )
+                // this.newsData = this.generateData()
                 axios
                     .get('http://127.0.0.1:8000/news/' + this.$route.params.id)
                     .then(response => {

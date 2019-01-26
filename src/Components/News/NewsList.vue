@@ -194,7 +194,7 @@
         background-position: center;
     }
     .related {
-        min-height: 300px;
+        min-height: 500px;
         max-height: 50vh;
     }
     .viewPort{
@@ -224,7 +224,7 @@
     .controlBar{
         width: 130px;
         max-width: 150px;
-        min-height: 400px;
+        min-height: 500px;
         max-height: 40vh;
         display: flex;
         flex-direction: column;
