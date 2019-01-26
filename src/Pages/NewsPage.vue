@@ -93,11 +93,14 @@
                     </a>
                 </sui-container>
             </div>
-            <divider  height="2vh" :background-image="this.newsData.backgroundImage"/>
+            <divider  height="2vh"
+                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+
+            />
 
             <comments-list></comments-list>
             <divider type="top" height="2vh"
-                     ::background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
 
             <news-list  title="Related News"
