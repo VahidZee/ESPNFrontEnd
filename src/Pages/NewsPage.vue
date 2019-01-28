@@ -142,15 +142,15 @@
             //Fetching Data
             fetchData() {
                 // this.newsData = this.generateData()
-                console.log('shit');
                 axios
-                    .get('http://127.0.0.1:8000/news/' + this.$route.params.id)
+                    .get(this.$store.getters.NewsBackEndURL + this.$route.params.id)
                     .then(response => {
                         let temp = response.data;
                         temp.publishDate = new Date( temp.publishDate );
                         this.newsData = temp;
                     })
                     .catch(error => {
+                        //TODO 404
                         console.log(error)
                         // this.errored = true
                     })

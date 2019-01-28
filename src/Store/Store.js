@@ -8,7 +8,7 @@ export const store = new Vuex.Store({
     state: {
         token: '',
         username: '',
-        backEndUrl: ''
+        backEndUrl: 'http://localhost:8000/'
 
     },
     mutations: {
@@ -22,5 +22,8 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
+        NewsBackEndURL : state => {
+            return state.backEndUrl + 'news/'
+        }
     }
 })
