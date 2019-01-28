@@ -1,10 +1,16 @@
 <template>
     <div>
-        <sui-button
+        <sui-label
                 size="huge"
                 color="black"
-                :icon="profileModalButtonIcon"
-                @click="handleProfileModalButtonClick"/>
+                :image="profileHasImage"
+                circular
+                @click="handleProfileModalButtonClick">
+            <sui-icon v-if="profileModalButtonIcon" name="sign-in"></sui-icon>
+            <img
+                    v-if="profileHasImage"
+                    src="https://semantic-ui.com/images/avatar/small/nan.jpg" />
+        </sui-label>
         <sui-modal
                 v-model="openSignIn"
                 :basic="false"
@@ -46,7 +52,10 @@
         },
         computed:{
             profileModalButtonIcon() {
-                return !this.$store.state['token']? 'user secret' : 'user circle';
+                return this.$store.state['token']? false : 'user circle';
+            },
+            profileHasImage() {
+                return this.$store.state['token']? true : true;
             }
         },
         beforeMount() {
