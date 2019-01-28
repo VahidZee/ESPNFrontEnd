@@ -14,9 +14,7 @@
                             <sui-button size="huge" color="black" icon="home"/>
                         </router-link>
                         <sui-button size="huge" color="black" icon="search"/>
-                        <sui-button size="huge" color="black" icon="rss"/>
-
-
+                        <ProfileModal></ProfileModal>
                     </sui-button-group>
                 </div>
 
@@ -45,8 +43,8 @@
 </template>
 
 <script>
-    // import LoginSgnUp from '../SignInSignUp/SignInSignUp'
-    // import LoginSignUp from "@/Components/SignInSignUp/SignInSignUp";
+    // import SingInSignUp from '../SignInSignUp/SignInSignUp'
+    import ProfileModal from "../Profile/ProfileModal";
 
     export default {
 
@@ -87,7 +85,9 @@
                 type: String,
             }
         },
-        components: {},
+        components: {
+            ProfileModal,
+        },
         data() {
             return {
                 sideBarActive : false

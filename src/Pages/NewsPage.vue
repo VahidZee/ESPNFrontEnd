@@ -1,7 +1,7 @@
 <template>
-    <div>
+    <div class="newsPage">
         <div v-if="newsData">
-            <div  class="content-container ">
+            <div  class="content-container " style="position: sticky;top:5px">
                 <sui-container text>
                     <div >
                         <h2 class="content-header" >
@@ -10,7 +10,7 @@
                         <span class="content-header-info">
 
                         <sui-icon shape="circular" name="calendar alternate outline icon" ></sui-icon>
-                        {{newsData.publishDate | formatDate}}
+                        {{ newsData.publishDate | formatDate}}
                         <sui-label v-show="newsData.isSubscribed" size="tiny" color="black" >
                             Subscribed
                         </sui-label>
@@ -49,8 +49,7 @@
                     img-width="1024"
                     img-height="480"
                     v-model="slide"
-                    @sliding-start="onSlideStart"
-                    @sliding-end="onSlideEnd"
+
             >
 
                 <b-carousel-slide
@@ -187,6 +186,7 @@
             //Fetching Data
             fetchData() {
                 // this.newsData = this.generateData()
+                console.log('shit');
                 axios
                     .get('http://127.0.0.1:8000/news/' + this.$route.params.id)
                     .then(response => {
@@ -215,12 +215,6 @@
                     arr.push[ shit.title ];
                 return arr;
             },
-            onSlideStart (slide) {
-                this.sliding = true
-            },
-            onSlideEnd (slide) {
-                this.sliding = false
-            }
         },
         filters: {
             formatDate( date ) {
@@ -237,6 +231,7 @@
             }
         },
         beforeMount() {
+
             this.fetchData()
         },
         watch: {
@@ -248,6 +243,10 @@
 </script>
 
 <style>
+    .newsPage{
+        position: static;
+        top: 5px;
+    }
     .content-container{
         width: 100vw;
         text-align: justify;
