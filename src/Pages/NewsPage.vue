@@ -139,50 +139,6 @@
             }
         },
         methods: {
-            //TODO remove
-            generateData() {
-                let lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam consectetur explicabo facere facilis in inventore nihil quod temporibus velit? A accusamus ad consequuntur deserunt dolores harum reprehenderit! Eos, nostrum.\n';
-                let tempID =  ( this.$route.params.id !=undefined ) ? this.$route.params.id :  Math.floor((Math.random() * 1000) + 1);
-                let obj = {
-                    id : tempID,
-                    title : 'News Title - ' + tempID,
-                    isSubscribed : (tempID % 6 === 0 || tempID % 6 === 2 || tempID % 7 === 6 ),
-                    paragraphs : [
-                    ],
-                    images : [
-                    ] ,
-                    tags : [
-                    ],
-                    resources : [
-                    ],
-                    publishDate : new Date( Math.floor((Math.random() * 1000) + 1) )
-                };
-                let tagTypes = ['P' , 'L' , 'G' , 'T'];
-                for( let i = 1 ; i <= tempID % 10 + 1 ; i++ )
-                    obj.resources.push({
-                        'title' : 'Resource-' + i,
-                        'link' : 'https://www.google.com/?q=' + i
-                    });
-                for( let i = 1 ; i <= tempID % 10 + 1 ; i++ )
-                    obj.tags.push(
-                        {
-                            type : tagTypes[ i % 4 ],
-                            id : Math.floor((Math.random() * 1000) + 1),
-                            title : tagTypes[ i % 4 ].toUpperCase() +' : ' + i,
-                        }
-                    );
-                for( let i = 1 ; i <= (tempID*113 ) % 20 ; i++ )
-                    obj.paragraphs.push(  (i % 5 === 3 ) ? lorem + lorem : (i % 5 === 1 ) ? lorem + lorem + lorem : lorem  );
-                for( let i = 1 ; i <= tempID % 20 ; i++ )
-                    obj.images.push(
-                        {
-                            image : 'https://picsum.photos/1024/480/?random=' + Math.floor((Math.random() * 313) + 1) ,
-                            caption : ( i % 3 === 1 ) ?  'Picture' + i : null,
-                            text : ( i % 5 === 1 || i % 3 === 2 ) ? 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse eros felis, tincidunt a tincidunt eget, convallis vel est. Ut pellentesque ut lacus vel interdum' : null
-                        }
-                    )
-                return obj;
-            },
             //Fetching Data
             fetchData() {
                 // this.newsData = this.generateData()

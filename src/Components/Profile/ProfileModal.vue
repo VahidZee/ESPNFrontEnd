@@ -48,6 +48,7 @@
         methods: {
             handleProfileModalButtonClick(){
                 this.openSignIn = !this.openSignIn;
+                this.$store.dispatch('login','username')
             }
         },
         computed:{
