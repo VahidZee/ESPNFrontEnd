@@ -34,7 +34,7 @@
             >
             </sui-dropdown>
             <sui-menu-item float="bottom">
-                <sui-button  @click="fetchData()">
+                <sui-button @click="fetchData()">
                     Load More
                 </sui-button>
             </sui-menu-item>
@@ -120,7 +120,7 @@
                 activeControl: this.defaultActive,
                 activeFilter: null,
                 posts: [],
-                pageNumber : 1
+                pageNumber: 1
             }
         },
 
@@ -155,31 +155,13 @@
             fetchData() {
                 axios
                     .get(
-                        'http://localhost:8000/news/?type=recent&page=' + this.pageNumber++
+                        this.$store.getters.NewsBackEndURL + '?type=recent&page=' + this.pageNumber++
                     )
                     .then(
                         response => {
-
-                            for( let i = 0 ; i < response.data.length ; i++ ){
+                            for (let i = 0; i < response.data.length; i++) {
                                 let temp = response.data[i]
-                                temp.publishDate = new Date( temp.publishDate );
-                                temp.sportType = (temp.sportType == 'F') ? 'Football' : 'Basketball';
-                                this.posts.push(temp)
-                            }
-                        }
-                    )
-            },
-            loadMore(){
-                axios
-                    .get(
-                        'http://localhost:8000/news/?type=recent&page=' + this.pageNumber++
-                    )
-                    .then(
-                        response => {
-
-                            for( let i = 0 ; i < response.data.length ; i++ ){
-                                let temp = response.data[i]
-                                temp.publishDate = new Date( temp.publishDate );
+                                temp.publishDate = new Date(temp.publishDate);
                                 temp.sportType = (temp.sportType == 'F') ? 'Football' : 'Basketball';
                                 this.posts.push(temp)
                             }
