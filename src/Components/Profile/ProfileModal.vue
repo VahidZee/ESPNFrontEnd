@@ -5,7 +5,7 @@
                 color="black"
                 :image="profileHasImage"
                 @click="handleProfileModalButtonClick">
-            <sui-icon v-if="profileModalButtonIcon" name="sign-in"></sui-icon>
+            <sui-icon v-if="profileModalButtonIcon" :name="profileModalButtonIcon"></sui-icon>
             <img
                     v-if="profileHasImage"
                     src="https://semantic-ui.com/images/avatar/small/nan.jpg" />
@@ -70,10 +70,11 @@
         },
         computed:{
             profileModalButtonIcon() {
-                return this.$store.state['token']? false : 'user circle';
+                return this.$store.state['logged_in']? (this.profileHasImage) ? false :'user circle'  :  'sign-in';
             },
             profileHasImage() {
-                return this.$store.state['token']? true : true;
+            // && this.$store.state['user'].profile_picture
+                return  this.$store.state.logged_in && this.$store.state.user_has_info ;
             }
         },
         beforeMount() {

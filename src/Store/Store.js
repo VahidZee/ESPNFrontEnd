@@ -7,6 +7,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state: {
         logged_in:false,
+        user_has_info:false,
         token: '',
         user: null,
         backEndUrl: 'http://localhost:8000/'
@@ -19,7 +20,10 @@ export const store = new Vuex.Store({
             store.dispatch('getMe');
         },
         CHANGE_USER_INFO( state, user ) {
+            if( user.profile_picture )
+                user.profile_picture = state.backEndUrl + user.profile_picture;
             state.user = user;
+
         }
     },
     actions: {
