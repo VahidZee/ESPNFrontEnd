@@ -125,12 +125,12 @@
                 </sui-modal-description>
             </sui-modal-content>
             <sui-modal-actions v-if="this.$store.state.logged_in && this.$store.state.user_has_info" >
-                    <sui-button positive @click.native="signOutButtonClick">
-                        Sign Up
-                    </sui-button>
-                    <sui-button secondary @click.native="toggleSignPage">
-                        Sign in
-                    </sui-button>
+                <sui-button secondary @click.native="toggleSignPage">
+                    Save
+                </sui-button>
+                <sui-button negative @click.native="signOutButtonClick">
+                    Sign Out
+                </sui-button>
             </sui-modal-actions>
 
         </sui-modal>
@@ -200,7 +200,19 @@
                 )
             },
             signOutButtonClick() {
-
+                let cred = {
+                    'token': this.$store.state.token
+                };
+                axios.post(
+                    this.$store.state.backEndUrl + 'users/logout' , cred
+                ).then(
+                    response => {
+                        if( !response.data.ok )
+                            this.error_message = response.data.description;
+                        else
+                            this.success_message = response.data.description;
+                    }
+                )
             },
             toggleSignPage() {
                 this.showSignInPage = !this.showSignInPage;
