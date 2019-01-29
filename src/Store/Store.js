@@ -24,6 +24,7 @@ export const store = new Vuex.Store({
                 this.state.backEndUrl + 'users/getMe' , cred
             ).then(
                 response => {
+                    // console.log(response.data);
                     this.commit('CHANGE_USER_INFO', response.data)
                 }
             )
@@ -48,7 +49,18 @@ export const store = new Vuex.Store({
             )
         },
         getMe(context){
-
+            console.log(this.state.token);
+            let cred = {
+                'token': this.state.token
+            };
+            axios.post(
+                this.state.backEndUrl + 'users/getMe' , cred
+            ).then(
+                response => {
+                    // console.log(response.data);
+                    this.commit('CHANGE_USER_INFO', response.data)
+                }
+            )
         }
     },
     getters: {
