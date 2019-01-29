@@ -87,11 +87,12 @@
                 </sui-modal-description>
             </sui-modal-content>
             <sui-modal-header v-if="this.$store.state.logged_in && this.$store.state.user_has_info">Profile Info</sui-modal-header>
-            <sui-modal-content image
+            <sui-modal-content :image="profileHasImage"
                                v-if="this.$store.state.logged_in && this.$store.state.user_has_info"
             >
                 <sui-image wrapped
                            size="medium"
+                           v-if="profileHasImage"
                            :src="this.$store.state.user.profile_picture"
                 />
 
@@ -125,8 +126,8 @@
                 </sui-modal-description>
             </sui-modal-content>
             <sui-modal-actions v-if="this.$store.state.logged_in && this.$store.state.user_has_info" >
-                <sui-button secondary @click.native="toggleSignPage">
-                    Save
+                <sui-button positive @click.native="toggleSignPage">
+                    Save Profile
                 </sui-button>
                 <sui-button negative @click.native="signOutButtonClick">
                     Sign Out
@@ -170,8 +171,11 @@
                     this.$store.state.backEndUrl + 'users/login' , cred
                 ).then(
                     response => {
-                        if( response.data.ok )
+                        if( response.data.ok ) {
+                            this.success_message = '';
+                            this.error_message = '';
                             this.$store.commit('LOGGED_IN',response.data.token);
+                        }
                         else
                             this.error_message = response.data.description;
                     }
@@ -209,8 +213,11 @@
                     response => {
                         if( !response.data.ok )
                             this.error_message = response.data.description;
-                        else
+                        else {
+                            this.$store.commit('LOGGED_OUT',response.data.token);
                             this.success_message = response.data.description;
+
+                        }
                     }
                 )
             },
