@@ -22,6 +22,18 @@
                     <sui-modal-description
                             class="view-port"
                     >
+                        <sui-message
+                                v-if="error_message"
+                                color="red"
+                        >
+                            {{error_message}}
+                        </sui-message>
+                        <sui-message
+                                v-if="success_message"
+                                color="green"
+                        >
+                            {{success_message}}
+                        </sui-message>
                         <sui-header>Username</sui-header>
                         <sui-input placeholder="Username" v-model="username" />
                         <sui-header>Password</sui-header>
@@ -42,8 +54,17 @@
                         class="view-port"
                         scrolling
                 >
-                    <sui-message v-if="error_message">
+                    <sui-message
+                            v-if="error_message"
+                            color="red"
+                    >
                         {{error_message}}
+                    </sui-message>
+                    <sui-message
+                            v-if="success_message"
+                            color="green"
+                    >
+                        {{success_message}}
                     </sui-message>
                     <sui-header>Username</sui-header>
                     <sui-input placeholder="Username" v-model="username" />
@@ -62,7 +83,6 @@
                         <sui-button secondary @click.native="toggleSignPage">
                             Sign in
                         </sui-button>
-
                     </sui-modal-actions>
                 </sui-modal-description>
             </sui-modal-content>
@@ -78,6 +98,7 @@
         data() {
             return {
                 error_message:'',
+                success_message:'',
                 modalOpen:false,
                 showSignInPage:true,
                 username:'',
@@ -92,14 +113,21 @@
         methods: {
             handleProfileModalButtonClick(){
                 this.modalOpen = !this.modalOpen;
-
-
             },
             signInButtonClick() {
                 let cred = {
                     username: this.username,
                     password: this.password
                 };
+                axios.post(
+                    this.$store.state.backEndUrl + 'users/login' , cred
+                ).then(
+                    response => {
+                        if( response.data.ok ) {
+                            this.$store.commit('LOGGED_IN',response.data.token);
+                        }
+                    }
+                );
                 this.$store.dispatch('login',cred)
             },
             signUpButtonClick() {
@@ -110,13 +138,15 @@
                     last_name:this.last_name,
                     email:this.email
                 };
+                this.error_message ='';
                 axios.post(
                     this.$store.state.backEndUrl + 'users/logon' , cred
                 ).then(
                     response => {
-                        if( !response.data.ok ) {
+                        if( !response.data.ok )
                             this.error_message = response.data.description;
-                        }
+                        else
+                            this.success_message = response.data.description;
                     }
                 )
             },
