@@ -8,7 +8,7 @@
             <sui-icon v-if="profileModalButtonIcon" :name="profileModalButtonIcon"></sui-icon>
             <img
                     v-if="profileHasImage"
-                    src="https://semantic-ui.com/images/avatar/small/nan.jpg" />
+                    :src="this.$store.state.user.profile_picture" />
         </sui-label>
         <sui-modal
                 v-model="modalOpen"
@@ -27,7 +27,7 @@
                         <sui-button positive @click.native="SignInButtonClick">
                             Sign in
                         </sui-button>
-                        <sui-button secondary @click.native="handleProfileModalButtonClick">
+                        <sui-button secondary @click.native="signUpButtonClick">
                             Sign Up
                         </sui-button>
                         </sui-modal-actions>
@@ -73,8 +73,8 @@
                 return this.$store.state['logged_in']? (this.profileHasImage) ? false :'user circle'  :  'sign-in';
             },
             profileHasImage() {
-            // && this.$store.state['user'].profile_picture
-                return  this.$store.state.logged_in && this.$store.state.user_has_info ;
+                return  this.$store.state.logged_in && this.$store.state.user_has_info && (this.$store.state.user.profile_picture.length != 0 )
+                    ;
             }
         },
         beforeMount() {

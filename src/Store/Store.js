@@ -17,13 +17,22 @@ export const store = new Vuex.Store({
         LOGGED_IN( state, token ) {
             state.token = token;
             state.logged_in = true;
-            store.dispatch('getMe');
+            let cred = {
+                'token': state.token
+            };
+            axios.post(
+                this.state.backEndUrl + 'users/getMe' , cred
+            ).then(
+                response => {
+                    this.commit('CHANGE_USER_INFO', response.data)
+                }
+            )
         },
         CHANGE_USER_INFO( state, user ) {
             if( user.profile_picture )
                 user.profile_picture = state.backEndUrl + user.profile_picture;
             state.user = user;
-
+            state.user_has_info = true;
         }
     },
     actions: {
@@ -39,16 +48,7 @@ export const store = new Vuex.Store({
             )
         },
         getMe(context){
-            let cred = {
-               'token': context.state.token
-            };
-            axios.post(
-                this.state.backEndUrl + 'users/getMe' , cred
-            ).then(
-                response => {
-                    this.commit('CHANGE_USER_INFO', response.data)
-                }
-            )
+
         }
     },
     getters: {
