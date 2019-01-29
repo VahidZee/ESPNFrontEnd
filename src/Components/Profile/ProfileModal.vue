@@ -180,7 +180,6 @@
                             this.error_message = response.data.description;
                     }
                 );
-                this.$store.dispatch('login',cred)
             },
             signUpButtonClick() {
                 let cred = {
