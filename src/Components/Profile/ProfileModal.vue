@@ -92,7 +92,7 @@
             >
                 <sui-image wrapped
                            size="medium"
-                           src="http://semantic-ui.com/images/avatar/large/rachel.png"
+                           :src="this.$store.state.user.profile_picture"
                 />
 
                 <sui-modal-description
@@ -112,20 +112,20 @@
                         {{success_message}}
                     </sui-message>
                     <sui-header>Username</sui-header>
-                    <sui-input placeholder="Username" :value="this.$store.username" />
+                    <sui-input placeholder="Username" :value="this.$store.state.user.username" />
                     <!--<sui-header>Password</sui-header>-->
                     <!--<sui-input placeholder="Password" type="password" v-model="password"/>-->
                     <sui-header>First Name</sui-header>
-                    <sui-input placeholder="First Name" :value="this.$store.first_name" />
+                    <sui-input placeholder="First Name" :value="this.$store.state.user.first_name" />
                     <sui-header>Last Name</sui-header>
-                    <sui-input placeholder="Last Name" :value="this.$store.last_name" />
+                    <sui-input placeholder="Last Name" :value="this.$store.state.user.last_name" />
                     <sui-header>Email</sui-header>
-                    <sui-input placeholder="Email" :value="this.$store.email" type="email" />
+                    <sui-input placeholder="Email" :value="this.$store.state.user.email" type="email" />
 
                 </sui-modal-description>
             </sui-modal-content>
             <sui-modal-actions v-if="this.$store.state.logged_in && this.$store.state.user_has_info" >
-                    <sui-button positive @click.native="signUpButtonClick">
+                    <sui-button positive @click.native="signOutButtonClick">
                         Sign Up
                     </sui-button>
                     <sui-button secondary @click.native="toggleSignPage">
@@ -198,6 +198,9 @@
                             this.success_message = response.data.description;
                     }
                 )
+            },
+            signOutButtonClick() {
+
             },
             toggleSignPage() {
                 this.showSignInPage = !this.showSignInPage;

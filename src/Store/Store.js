@@ -29,6 +29,12 @@ export const store = new Vuex.Store({
                 }
             )
         },
+        LOGGED_OUT( state ) {
+            state.token = '';
+            state.logged_in = false;
+            state.user_has_info = false;
+            state.user = null;
+        },
         CHANGE_USER_INFO( state, user ) {
             if( user.profile_picture )
                 user.profile_picture = state.backEndUrl + user.profile_picture;
