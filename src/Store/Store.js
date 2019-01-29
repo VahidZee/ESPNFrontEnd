@@ -8,16 +8,18 @@ export const store = new Vuex.Store({
     state: {
         logged_in:false,
         token: '',
-        username: '',
-        first_name:'',
-        last_name:'',
-        profile_picture:'',
+        user: null,
         backEndUrl: 'http://localhost:8000/'
 
     },
     mutations: {
         LOGGED_IN( state, token ) {
             state.token = token;
+            state.logged_in = true;
+            store.dispatch('getMe');
+        },
+        CHANGE_USER_INFO( state, user ) {
+            state.user = user;
         }
     },
     actions: {
@@ -33,7 +35,16 @@ export const store = new Vuex.Store({
             )
         },
         getMe(context){
-
+            let cred = {
+               'token': context.state.token
+            };
+            axios.post(
+                this.state.backEndUrl + 'users/getMe' , cred
+            ).then(
+                response => {
+                    this.commit('CHANGE_USER_INFO', response.data)
+                }
+            )
         }
     },
     getters: {

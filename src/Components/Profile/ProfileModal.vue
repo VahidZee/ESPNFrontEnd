@@ -11,15 +11,14 @@
                     src="https://semantic-ui.com/images/avatar/small/nan.jpg" />
         </sui-label>
         <sui-modal
-                v-model="openSignIn"
+                v-model="modalOpen"
                 :basic="false"
                 :closeIcon="true"
                 size="fullscreen"
         >
-
-                <sui-modal-header>Sign-in</sui-modal-header>
-                <sui-modal-content >
-                    <!--<sui-modal-description>-->
+                <sui-modal-header v-if="!this.$store.state.logged_in">Sign-in</sui-modal-header>
+                <sui-modal-content v-if="!this.$store.state.logged_in" >
+                    <sui-modal-description>
                         <sui-header>Username</sui-header>
                         <sui-input placeholder="Username" v-model="username" />
                         <sui-header>Password</sui-header>
@@ -32,7 +31,7 @@
                             Sign Up
                         </sui-button>
                         </sui-modal-actions>
-                    <!--</sui-modal-description>-->
+                    </sui-modal-description>
                 </sui-modal-content>
 
         </sui-modal>
@@ -44,7 +43,7 @@
         name: "ProfileModal",
         data() {
             return {
-                openSignIn:false,
+                modalOpen:false,
                 username:'',
                 password:'',
             }
@@ -54,7 +53,7 @@
         },
         methods: {
             handleProfileModalButtonClick(){
-                this.openSignIn = !this.openSignIn;
+                this.modalOpen = !this.modalOpen;
 
 
             },
@@ -62,8 +61,11 @@
                 let cred = {
                     username: this.username,
                     password: this.password
-                }
+                };
                 this.$store.dispatch('login',cred)
+            },
+            signUpButtonClick() {
+
             }
         },
         computed:{
