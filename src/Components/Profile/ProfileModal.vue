@@ -4,7 +4,6 @@
                 size="huge"
                 color="black"
                 :image="profileHasImage"
-                circular
                 @click="handleProfileModalButtonClick">
             <sui-icon v-if="profileModalButtonIcon" name="sign-in"></sui-icon>
             <img
@@ -17,19 +16,25 @@
                 :closeIcon="true"
                 size="fullscreen"
         >
-            <sui-modal-header>Select a Photo</sui-modal-header>
-            <sui-modal-content >
-                <sui-modal-description>
-                    <sui-header>Default Profile Image</sui-header>
-                    <p>We've found the following gravatar image associated with your e-mail address.</p>
-                    <p>Is it okay to use this photo?</p>
-                </sui-modal-description>
-            </sui-modal-content>
-            <!--<sui-modal-actions>-->
-                <!--<sui-button positive @click.native="handleProfileModalButtonClick">-->
-                    <!--OK-->
-                <!--</sui-button>-->
-            <!--</sui-modal-actions>-->
+
+                <sui-modal-header>Sign-in</sui-modal-header>
+                <sui-modal-content >
+                    <!--<sui-modal-description>-->
+                        <sui-header>Username</sui-header>
+                        <sui-input placeholder="Username" v-model="username" />
+                        <sui-header>Password</sui-header>
+                        <sui-input placeholder="Password" type="password" v-model="password"/>
+                        <sui-modal-actions>
+                        <sui-button positive @click.native="SignInButtonClick">
+                            Sign in
+                        </sui-button>
+                        <sui-button secondary @click.native="handleProfileModalButtonClick">
+                            Sign Up
+                        </sui-button>
+                        </sui-modal-actions>
+                    <!--</sui-modal-description>-->
+                </sui-modal-content>
+
         </sui-modal>
     </div>
 </template>
@@ -40,6 +45,8 @@
         data() {
             return {
                 openSignIn:false,
+                username:'',
+                password:'',
             }
         },
         components:{
@@ -48,7 +55,15 @@
         methods: {
             handleProfileModalButtonClick(){
                 this.openSignIn = !this.openSignIn;
-                this.$store.dispatch('login','username')
+
+
+            },
+            SignInButtonClick() {
+                let cred = {
+                    username: this.username,
+                    password: this.password
+                }
+                this.$store.dispatch('login',cred)
             }
         },
         computed:{
