@@ -17,8 +17,8 @@
                 size="fullscreen"
 
         >
-                <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage">Sign-in</sui-modal-header>
-                <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage" >
+            <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage">Sign-in</sui-modal-header>
+            <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage" >
                     <sui-modal-description
                             class="view-port"
                     >
@@ -86,6 +86,53 @@
                     </sui-modal-actions>
                 </sui-modal-description>
             </sui-modal-content>
+            <sui-modal-header v-if="this.$store.state.logged_in && this.$store.state.user_has_info">Profile Info</sui-modal-header>
+            <sui-modal-content image
+                               v-if="this.$store.state.logged_in && this.$store.state.user_has_info"
+            >
+                <sui-image wrapped
+                           size="medium"
+                           src="http://semantic-ui.com/images/avatar/large/rachel.png"
+                />
+
+                <sui-modal-description
+                        class="view-port"
+                        scrolling
+                >
+                    <sui-message
+                            v-if="error_message"
+                            color="red"
+                    >
+                        {{error_message}}
+                    </sui-message>
+                    <sui-message
+                            v-if="success_message"
+                            color="green"
+                    >
+                        {{success_message}}
+                    </sui-message>
+                    <sui-header>Username</sui-header>
+                    <sui-input placeholder="Username" :value="this.$store.username" />
+                    <!--<sui-header>Password</sui-header>-->
+                    <!--<sui-input placeholder="Password" type="password" v-model="password"/>-->
+                    <sui-header>First Name</sui-header>
+                    <sui-input placeholder="First Name" :value="this.$store.first_name" />
+                    <sui-header>Last Name</sui-header>
+                    <sui-input placeholder="Last Name" :value="this.$store.last_name" />
+                    <sui-header>Email</sui-header>
+                    <sui-input placeholder="Email" :value="this.$store.email" type="email" />
+
+                </sui-modal-description>
+            </sui-modal-content>
+            <sui-modal-actions v-if="this.$store.state.logged_in && this.$store.state.user_has_info" >
+                    <sui-button positive @click.native="signUpButtonClick">
+                        Sign Up
+                    </sui-button>
+                    <sui-button secondary @click.native="toggleSignPage">
+                        Sign in
+                    </sui-button>
+            </sui-modal-actions>
+
         </sui-modal>
     </div>
 </template>
@@ -123,9 +170,10 @@
                     this.$store.state.backEndUrl + 'users/login' , cred
                 ).then(
                     response => {
-                        if( response.data.ok ) {
+                        if( response.data.ok )
                             this.$store.commit('LOGGED_IN',response.data.token);
-                        }
+                        else
+                            this.error_message = response.data.description;
                     }
                 );
                 this.$store.dispatch('login',cred)
@@ -138,7 +186,8 @@
                     last_name:this.last_name,
                     email:this.email
                 };
-                this.error_message ='';
+                this.success_message = '';
+                this.error_message = '';
                 axios.post(
                     this.$store.state.backEndUrl + 'users/logon' , cred
                 ).then(
@@ -152,6 +201,8 @@
             },
             toggleSignPage() {
                 this.showSignInPage = !this.showSignInPage;
+                this.success_message = '';
+                this.error_message = '';
             }
         },
         computed:{
