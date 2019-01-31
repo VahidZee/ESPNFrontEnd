@@ -20,8 +20,8 @@
 
             <!-- Control Options -->
             <sui-menu-item
-                    v-show="controlOptions.length && !related.length"
-                    v-for="(item, itemKey) in controlOptions"
+                    v-show="processControlsOptions.length && !related.length"
+                    v-for="(item, itemKey) in processControlsOptions"
                     :key="'controlItem' +itemKey"
                     @click="selectControl(item)"
                     :active="isActive(item)"
@@ -42,6 +42,7 @@
             </sui-dropdown>
 
         </sui-menu>
+
         <!-- View Port -->
         <div class="viewPort" :class="{ 'related' : !related.length }">
             <!-- News Cards-->
@@ -80,10 +81,10 @@
                 type: String,
                 required: true
             },
-            'control-options': {
+            'control-options-dict': {
                 type: Array,
                 default: () => {
-                    return ['Recent', 'Subscribed'];
+                    return [{name: 'Recent', needsAuth:false}, {name:'Subscribed' , needsAuth:true}];
                 }
             },
             'default-active': {
@@ -114,10 +115,6 @@
                     ]
                 }
 
-            },
-            'auth': {
-                type: Boolean,
-                default: true
             },
             'related': {
                 type: Array,
@@ -150,7 +147,17 @@
                     backgroundPosition: 'center'
                 }
             },
-
+            processControlsOptions() {
+                let controlOptions = []
+                for( let i = 0; i < this.controlOptionsDict.length; i++ ) {
+                    if( !this.controlOptionsDict[i].needsAuth )
+                        controlOptions.push(this.controlOptionsDict[i].name);
+                    else
+                    if(this.$store.state.logged_in)
+                        controlOptions.push(this.controlOptionsDict[i].name);
+                }
+                return controlOptions
+            },
         },
 
         //Methods
@@ -165,13 +172,14 @@
                     return this.activeFilter === post.sportType;
                 return this.activeFilter === post.sportType && post.isSubscribed;
             },
+
             //Data Fetching
             fetchData(tab) {
                 if( !tab )
                     tab = this.activeControl;
                 axios
                     .get(
-                        this.$store.getters.NewsBackEndURL + '?type=recent&page=' + this.controlsData[tab].pageNumber
+                        this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() +'&page=' + this.controlsData[tab].pageNumber
                     )
                     .then(
                         response => {
@@ -188,15 +196,18 @@
             },
             //ControlBar Methods
             selectControl(item) {
-                this.shownPosts = this.posts[item];
-                if (item === 'Subscribed')
-                    this.activeControl = (this.auth) ? item : this.activeControl;
-                else
-                    this.activeControl = item;
+                this.activeControl = item;
+                this.shownPosts = this.posts[this.activeControl];
+
             },
             isActive(name) {
                 return this.activeControl === name;
             },
+        },
+
+        // Watch list
+        watch: {
+            processControlsOptions() {},
         },
 
         //Events
@@ -205,13 +216,14 @@
         },
         created() {
             this.posts = {};
-            for(let i = 0; i < this.controlOptions.length ; i++ ){
-                this.posts[this.controlOptions[i]] = [];
-                this.controlsData[this.controlOptions[i]] = {
+            for(let i = 0; i < this.controlOptionsDict.length; i++ ){
+                this.posts[this.controlOptionsDict[i].name] = [];
+                this.controlsData[this.controlOptionsDict[i].name] = {
                     pageNumber : 1,
                     has_more: true
                 }
             }
+
 
             this.fetchData(this.activeControl);
             this.selectControl(this.defaultActive);
