@@ -12,10 +12,12 @@
                 <sui-icon name="long arrow alternate down"></sui-icon>
             </sui-menu-item>
             <sui-menu-item
-                    v-for="(item, itemKey) in related"
+                    v-for="(item, itemKey) in relatedDictList"
                     :key="'tag' +itemKey"
+                    :active="item.active"
+                    @click="item.active = !item.active"
             >
-                {{item.title}}
+                {{item.tag.title}}
             </sui-menu-item>
 
             <!-- Control Options -->
@@ -54,14 +56,16 @@
             ></NewsCard>
 
             <!-- Load More Button -->
-            <sui-button @click="fetchData(this.activeControl)"
+            <sui-button @click="fetchData()"
                         style="margin: 20px"
-                        v-if="this.controlsData[this.activeControl].has_more"
+                        v-if="showLoadMoreButton"
             >
                 Load More
             </sui-button>
+
+            <!-- No More Items Found Message -->
             <sui-message
-                    v-if="!this.controlsData[this.activeControl].has_more"
+                    v-if="!showLoadMoreButton"
                     size="huge"
                     color="black"
             >
@@ -139,7 +143,11 @@
                 posts: {},
                 shownPosts: [],
                 controlsData: {},
+
+                relatedDictList : [],
+                // Fetch Data Fields
                 has_more: false,
+                pageNumber:1,
             }
         },
 
@@ -164,12 +172,23 @@
                 }
                 return controlOptions
             },
+            showLoadMoreButton() {
+                if( this.related.length )
+                    return this.has_more;
+                return this.controlsData[this.activeControl].has_more
+
+            },
+            activeTags() {
+
+            }
         },
 
         //Methods
         methods: {
             //Data Filtering
             filtered(post) {
+                if( this.related.length )
+                    return true;
                 if (this.activeFilter === null )
                     return true;
                 if (!(this.activeFilter === null))
@@ -178,24 +197,51 @@
 
             //Data Fetching
             fetchData(tab) {
-                if (!tab)
-                    tab = this.activeControl;
-                axios
-                    .get(
-                        this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() + '&page=' + this.controlsData[tab].pageNumber
-                    )
-                    .then(
-                        response => {
-                            this.controlsData[tab].pageNumber++;
-                            this.controlsData[tab].has_more = response.data.has_more;
-                            for (let i = 0; i < response.data.list.length; i++) {
-                                let temp = response.data.list[i];
-                                temp.publishDate = new Date(temp.publishDate);
-                                temp.sportType = (temp.sportType == 'F') ? 'Football' : 'Basketball';
-                                this.posts[tab].push(temp)
+                let data = {};
+                if( this.$store.state.logged_in)
+                    data['token'] = this.$store.state.token;
+
+                if( !this.related.length ) {
+                    if (!tab)
+                        tab = this.activeControl;
+                    axios
+                        .post(
+                            this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() + '&page=' + this.controlsData[tab].pageNumber
+                            ,data
+                        )
+                        .then(
+                            response => {
+                                this.controlsData[tab].pageNumber++;
+                                this.controlsData[tab].has_more = response.data.has_more;
+                                for (let i = 0; i < response.data.list.length; i++) {
+                                    let temp = response.data.list[i];
+                                    temp.publishDate = new Date(temp.publishDate);
+                                    temp.sportType = (temp.sportType === 'F') ? 'Football' : 'Basketball';
+                                    this.posts[tab].push(temp)
+                                }
                             }
-                        }
-                    )
+                        )
+                } else {
+                    data['tags'] = this.related;
+                    axios
+                        .post(
+                            this.$store.getters.NewsBackEndURL + '?type=related&page=' + this.pageNumber,
+                            data
+                        )
+                        .then(
+                            response => {
+                                this.pageNumber++;
+                                this.controlsData[tab].has_more = response.data.has_more;
+                                for (let i = 0; i < response.data.list.length; i++) {
+                                    let temp = response.data.list[i];
+                                    temp.publishDate = new Date(temp.publishDate);
+                                    temp.sportType = (temp.sportType === 'F') ? 'Football' : 'Basketball';
+                                    this.posts[tab].push(temp)
+                                }
+                            }
+                        )
+                }
+
             },
             //ControlBar Methods
             selectControl(item) {
@@ -218,20 +264,29 @@
         beforeMount() {
         },
         created() {
-            this.activeControl = this.defaultActive;
+            if(!this.related.length) {
+                this.activeControl = this.defaultActive;
 
-            this.posts = {};
-            for (let i = 0; i < this.controlOptionsDict.length; i++) {
-                this.posts[this.controlOptionsDict[i].name] = [];
-                this.controlsData[this.controlOptionsDict[i].name] = {
-                    pageNumber: 1,
-                    has_more: true
+                this.posts = {};
+                for (let i = 0; i < this.controlOptionsDict.length; i++) {
+                    this.posts[this.controlOptionsDict[i].name] = [];
+                    this.controlsData[this.controlOptionsDict[i].name] = {
+                        pageNumber: 1,
+                        has_more: true
+                    }
                 }
+
+
+                this.fetchData();
+                this.selectControl(this.defaultActive);
+            }else {
+                for( let i = 0; i < this.related.length; i++)
+                    this.relatedDictList.push({
+                        tag:this.related[i],
+                        active:true
+                    })
             }
 
-
-            this.fetchData(this.activeControl);
-            this.selectControl(this.defaultActive);
         },
     }
 </script>

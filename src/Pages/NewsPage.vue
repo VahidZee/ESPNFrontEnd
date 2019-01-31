@@ -160,7 +160,6 @@
         methods: {
             //Fetching Data
             fetchData() {
-                // this.newsData = this.generateData()
                 axios
                     .get(this.$store.getters.NewsBackEndURL + this.$route.params.id)
                     .then(response => {
