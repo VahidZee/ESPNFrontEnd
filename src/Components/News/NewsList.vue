@@ -11,12 +11,12 @@
                 Tags
                 <sui-icon name="long arrow alternate down"></sui-icon>
             </sui-menu-item>
-                <sui-menu-item
-                        v-for="(item, itemKey) in related"
-                        :key="'tag' +itemKey"
-                >
-                    {{item.title}}
-                </sui-menu-item>
+            <sui-menu-item
+                    v-for="(item, itemKey) in related"
+                    :key="'tag' +itemKey"
+            >
+                {{item.title}}
+            </sui-menu-item>
 
             <!-- Control Options -->
             <sui-menu-item
@@ -54,12 +54,19 @@
             ></NewsCard>
 
             <!-- Load More Button -->
-            <sui-button @click="fetchData()"
+            <sui-button @click="fetchData(this.activeControl)"
                         style="margin: 20px"
-                        v-if="controlsData[activeControl].has_more"
+                        v-if="this.controlsData[this.activeControl].has_more"
             >
                 Load More
             </sui-button>
+            <sui-message
+                    v-if="!this.controlsData[this.activeControl].has_more"
+                    size="huge"
+                    color="black"
+            >
+                No more items were found!
+            </sui-message>
         </div>
     </div>
 
@@ -84,7 +91,7 @@
             'control-options-dict': {
                 type: Array,
                 default: () => {
-                    return [{name: 'Recent', needsAuth:false}, {name:'Subscribed' , needsAuth:true}];
+                    return [{name: 'Recent', needsAuth: false}, {name: 'Subscribed', needsAuth: true}];
                 }
             },
             'default-active': {
@@ -130,9 +137,9 @@
                 activeControl: this.defaultActive,
                 activeFilter: null,
                 posts: {},
-                shownPosts : [],
+                shownPosts: [],
                 controlsData: {},
-                has_more:false,
+                has_more: false,
             }
         },
 
@@ -149,11 +156,10 @@
             },
             processControlsOptions() {
                 let controlOptions = []
-                for( let i = 0; i < this.controlOptionsDict.length; i++ ) {
-                    if( !this.controlOptionsDict[i].needsAuth )
+                for (let i = 0; i < this.controlOptionsDict.length; i++) {
+                    if (!this.controlOptionsDict[i].needsAuth)
                         controlOptions.push(this.controlOptionsDict[i].name);
-                    else
-                    if(this.$store.state.logged_in)
+                    else if (this.$store.state.logged_in)
                         controlOptions.push(this.controlOptionsDict[i].name);
                 }
                 return controlOptions
@@ -164,22 +170,19 @@
         methods: {
             //Data Filtering
             filtered(post) {
-                if (this.activeFilter === null && (this.activeControl === 'Recent'))
+                if (this.activeFilter === null )
                     return true;
-                if (this.activeFilter === null && !(this.activeControl === 'Recent'))
-                    return post.isSubscribed;
-                if (!(this.activeFilter === null) && (this.activeControl === 'Recent'))
+                if (!(this.activeFilter === null))
                     return this.activeFilter === post.sportType;
-                return this.activeFilter === post.sportType && post.isSubscribed;
             },
 
             //Data Fetching
             fetchData(tab) {
-                if( !tab )
+                if (!tab)
                     tab = this.activeControl;
                 axios
                     .get(
-                        this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() +'&page=' + this.controlsData[tab].pageNumber
+                        this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() + '&page=' + this.controlsData[tab].pageNumber
                     )
                     .then(
                         response => {
@@ -208,18 +211,20 @@
         // Watch list
         watch: {
             processControlsOptions() {},
+
         },
 
         //Events
         beforeMount() {
-            this.activeControl = this.defaultActive;
         },
         created() {
+            this.activeControl = this.defaultActive;
+
             this.posts = {};
-            for(let i = 0; i < this.controlOptionsDict.length; i++ ){
+            for (let i = 0; i < this.controlOptionsDict.length; i++) {
                 this.posts[this.controlOptionsDict[i].name] = [];
                 this.controlsData[this.controlOptionsDict[i].name] = {
-                    pageNumber : 1,
+                    pageNumber: 1,
                     has_more: true
                 }
             }
