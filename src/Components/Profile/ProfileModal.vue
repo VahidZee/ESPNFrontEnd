@@ -368,8 +368,10 @@
                     response => {
                         if( !response.data.ok )
                             this.error_message = response.data.description;
-                        else
+                        else {
                             this.success_message = response.data.description;
+                            this.activationKeyForm = true;
+                        }
                     }
                 )
             },
@@ -380,8 +382,24 @@
                 this.success_message = '';
             },
             sendActivationKey() {
-                this.access_token = '';
-
+                let cred = {
+                    'token': this.access_token
+                };
+                axios.post(
+                    this.$store.state.backEndUrl + 'users/activate_account' , cred
+                ).then(
+                    response => {
+                        if( !response.data.ok )
+                            this.error_message = response.data.description;
+                        else {
+                            this.success_message = response.data.description;
+                            this.activationKeyForm = false;
+                            this.access_token = '';
+                            this.error_message = '';
+                            this.showSignInPage = true;
+                        }
+                    }
+                )
             },
 
             //Sign In functions
@@ -405,8 +423,10 @@
 
                             this.$store.commit('LOGGED_IN',response.data.token);
                         }
-                        else
+                        else{
                             this.error_message = response.data.description;
+                            this.success_message = '';
+                        }
                     }
                 );
             },
