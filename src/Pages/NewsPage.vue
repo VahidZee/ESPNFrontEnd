@@ -1,6 +1,8 @@
 <template>
     <div class="newsPage">
         <div v-if="newsData">
+
+            <!-- Title -->
             <div  class="content-container " style="position: sticky;top:5px">
                 <sui-container text>
                     <div >
@@ -18,6 +20,8 @@
                     </div>
                 </sui-container>
             </div>
+
+            <!-- Tags -->
             <div  class="content-container content-header">
                 <sui-container text v-show="newsData.tags.length">
                 <span  >
@@ -33,6 +37,8 @@
                     </router-link>
                 </sui-container>
             </div>
+
+            <!-- Images -->
             <divider
                     v-show="newsData.images.length"
                     height="2vh"
@@ -64,6 +70,8 @@
                     height="4vh"
                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
+
+            <!-- Content -->
             <div class="content-container" >
                 <sui-container text>
                     <p
@@ -74,6 +82,8 @@
                     </p>
                 </sui-container>
             </div>
+
+            <!-- Resources -->
             <divider height="2vh"
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
@@ -97,11 +107,13 @@
 
             />
 
+            <!-- Comments -->
             <comments-list></comments-list>
             <divider type="top" height="2vh"
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
 
+            <!-- Related News -->
             <news-list  title="Related News"
                         :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
                         :related="newsData.tags"
@@ -113,6 +125,13 @@
                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
         </div>
+
+        <sui-message
+            v-if="error_message"
+            color="red"
+        >
+            {{ error_message }}
+        </sui-message>
     </div>
 </template>
 
@@ -129,7 +148,7 @@
             return {
                 newsData : null,
                 slide: 0,
-                sliding: null
+                error_message:'',
             }
         },
         props: {
@@ -150,9 +169,7 @@
                         this.newsData = temp;
                     })
                     .catch(error => {
-                        //TODO 404
-                        console.log(error)
-                        // this.errored = true
+                        this.error_message = 'News Was Not Found'
                     })
             },
             //Styling
