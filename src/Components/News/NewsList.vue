@@ -58,7 +58,7 @@
             <!-- Load More Button -->
             <sui-button @click="fetchData()"
                         style="margin: 50px"
-                        v-if="showLoadMoreButton"
+                        v-if="has_more"
                         color="black"
                         size="huge"
             >
@@ -67,7 +67,7 @@
 
             <!-- No More Items Found Message -->
             <sui-message
-                    v-if="!showLoadMoreButton"
+                    v-if="!has_more"
                     style="margin: 50px"
                     size="huge"
                     color="black"
@@ -175,16 +175,10 @@
                 }
                 return controlOptions
             },
-            showLoadMoreButton() {
-                if (this.related.length)
-                    return this.has_more;
-                return this.controlsData[this.activeControl].has_more
-
-            },
             activeTags() {
                 let activeTags = [];
                 for (let i = 0; i < this.relatedDictList.length; i++) {
-                    if( this.relatedDictList[i].active )
+                    if (this.relatedDictList[i].active)
                         activeTags.push(this.relatedDictList[i].tag)
                 }
                 return activeTags;
@@ -221,6 +215,7 @@
                             response => {
                                 this.controlsData[tab].pageNumber++;
                                 this.controlsData[tab].has_more = response.data.has_more;
+                                this.has_more = response.data.has_more;
                                 for (let i = 0; i < response.data.list.length; i++) {
                                     let temp = response.data.list[i];
                                     temp.publishDate = new Date(temp.publishDate);
@@ -256,6 +251,7 @@
             selectControl(item) {
                 this.activeControl = item;
                 this.shownPosts = this.posts[this.activeControl];
+                this.has_more = this.controlsData[item].has_more;
             },
             isActive(name) {
                 return this.activeControl === name;
@@ -273,7 +269,6 @@
         watch: {
             processControlsOptions() {
             },
-
         },
 
         //Events
