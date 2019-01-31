@@ -17,6 +17,7 @@
                 size="fullscreen"
 
         >
+            <!-- Sign-in Form -->
             <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage">Sign-in</sui-modal-header>
             <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage" >
                     <sui-modal-description
@@ -48,7 +49,8 @@
                         </sui-modal-actions>
                     </sui-modal-description>
                 </sui-modal-content>
-            <sui-modal-header v-if="!this.$store.state.logged_in && !showSignInPage">Sign-in</sui-modal-header>
+            <!-- Sign-Up Form -->
+            <sui-modal-header v-if="!this.$store.state.logged_in && !showSignInPage">Sign-Up</sui-modal-header>
             <sui-modal-content v-if="!this.$store.state.logged_in && !showSignInPage" >
                 <sui-modal-description
                         class="view-port"
@@ -68,14 +70,22 @@
                     </sui-message>
                     <sui-header>Username</sui-header>
                     <sui-input placeholder="Username" v-model="username" />
+
                     <sui-header>Password</sui-header>
                     <sui-input placeholder="Password" type="password" v-model="password"/>
+
+                    <sui-header>Re-Enter Password</sui-header>
+                    <sui-input placeholder="Re-Enter Password" type="password" v-model="reenter_password"/>
+
                     <sui-header>First Name</sui-header>
                     <sui-input placeholder="First Name" v-model="first_name" />
+
                     <sui-header>Last Name</sui-header>
                     <sui-input placeholder="Last Name" v-model="last_name" />
+
                     <sui-header>Email</sui-header>
                     <sui-input placeholder="Email" v-model="email" type="email" />
+
                     <sui-modal-actions>
                         <sui-button positive @click.native="signUpButtonClick">
                             Sign Up
@@ -95,7 +105,6 @@
                            v-if="profileHasImage"
                            :src="this.$store.state.user.profile_picture"
                 />
-
                 <sui-modal-description
                         class="view-port"
                         scrolling
@@ -151,6 +160,7 @@
                 showSignInPage:true,
                 username:'',
                 password:'',
+                reenter_password:'',
                 first_name:'',
                 last_name:'',
                 email:'',
@@ -160,6 +170,8 @@
         },
         methods: {
             handleProfileModalButtonClick(){
+                this.success_message = '';
+                this.error_message = '';
                 this.modalOpen = !this.modalOpen;
             },
             signInButtonClick() {
@@ -182,6 +194,10 @@
                 );
             },
             signUpButtonClick() {
+                if(this.password != this.reenter_password ) {
+                    this.error_message = 'Password didn\'t match its re-entered value';
+                    return
+                }
                 let cred = {
                     username: this.username,
                     password: this.password,
