@@ -31,7 +31,7 @@
                     <router-link
                             v-for="(tag , i ) in newsData.tags"
                             :key="'tag' + i"
-                            :to="'/' + tag.type + '/' + tag.id"
+                            :to="'/' + tagType(tag.type) + '/' + tag.id"
                     >
                         <sui-button size="tiny" :content="tag.title" :color="tagColor(tag.type)" style="margin: 2px" />
                     </router-link>
@@ -171,6 +171,7 @@
                         this.error_message = 'News Was Not Found'
                     })
             },
+
             //Styling
             tagColor( tagType ) {
                 if( tagType === 'P')
@@ -181,11 +182,14 @@
                     return 'red';
                 return 'black'
             },
-            tagNames() {
-                let arr = [];
-                for(  let shit in this.newsData.tags )
-                    arr.push[ shit.title ];
-                return arr;
+            tagType( tagType ) {
+                if( tagType === 'P')
+                    return 'player';
+                if( tagType === 'T')
+                    return 'team';
+                if( tagType === 'G')
+                    return 'game';
+                return 'league'
             },
         },
         filters: {
