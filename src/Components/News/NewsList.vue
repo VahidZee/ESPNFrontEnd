@@ -15,7 +15,7 @@
                     v-for="(item, itemKey) in relatedDictList"
                     :key="'tag' +itemKey"
                     :active="item.active"
-                    @click="item.active = !item.active"
+                    @click="toggleTag(item)"
             >
                 {{item.tag.title}}
             </sui-menu-item>
@@ -57,8 +57,10 @@
 
             <!-- Load More Button -->
             <sui-button @click="fetchData()"
-                        style="margin: 20px"
+                        style="margin: 50px"
                         v-if="showLoadMoreButton"
+                        color="black"
+                        size="huge"
             >
                 Load More
             </sui-button>
@@ -66,6 +68,7 @@
             <!-- No More Items Found Message -->
             <sui-message
                     v-if="!showLoadMoreButton"
+                    style="margin: 50px"
                     size="huge"
                     color="black"
             >
@@ -144,10 +147,10 @@
                 shownPosts: [],
                 controlsData: {},
 
-                relatedDictList : [],
+                relatedDictList: [],
                 // Fetch Data Fields
                 has_more: false,
-                pageNumber:1,
+                pageNumber: 1,
             }
         },
 
@@ -173,13 +176,18 @@
                 return controlOptions
             },
             showLoadMoreButton() {
-                if( this.related.length )
+                if (this.related.length)
                     return this.has_more;
                 return this.controlsData[this.activeControl].has_more
 
             },
             activeTags() {
-
+                let activeTags = [];
+                for (let i = 0; i < this.relatedDictList.length; i++) {
+                    if( this.relatedDictList[i].active )
+                        activeTags.push(this.relatedDictList[i].tag)
+                }
+                return activeTags;
             }
         },
 
@@ -187,9 +195,9 @@
         methods: {
             //Data Filtering
             filtered(post) {
-                if( this.related.length )
+                if (this.related.length)
                     return true;
-                if (this.activeFilter === null )
+                if (this.activeFilter === null)
                     return true;
                 if (!(this.activeFilter === null))
                     return this.activeFilter === post.sportType;
@@ -198,16 +206,16 @@
             //Data Fetching
             fetchData(tab) {
                 let data = {};
-                if( this.$store.state.logged_in)
+                if (this.$store.state.logged_in)
                     data['token'] = this.$store.state.token;
 
-                if( !this.related.length ) {
+                if (!this.related.length) {
                     if (!tab)
                         tab = this.activeControl;
                     axios
                         .post(
                             this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() + '&page=' + this.controlsData[tab].pageNumber
-                            ,data
+                            , data
                         )
                         .then(
                             response => {
@@ -222,7 +230,7 @@
                             }
                         )
                 } else {
-                    data['tags'] = this.related;
+                    data['tags'] = this.activeTags;
                     axios
                         .post(
                             this.$store.getters.NewsBackEndURL + '?type=related&page=' + this.pageNumber,
@@ -231,32 +239,40 @@
                         .then(
                             response => {
                                 this.pageNumber++;
-                                this.controlsData[tab].has_more = response.data.has_more;
+                                this.has_more = response.data.has_more;
                                 for (let i = 0; i < response.data.list.length; i++) {
                                     let temp = response.data.list[i];
                                     temp.publishDate = new Date(temp.publishDate);
                                     temp.sportType = (temp.sportType === 'F') ? 'Football' : 'Basketball';
-                                    this.posts[tab].push(temp)
+                                    this.shownPosts.push(temp)
                                 }
                             }
                         )
                 }
 
             },
+
             //ControlBar Methods
             selectControl(item) {
                 this.activeControl = item;
                 this.shownPosts = this.posts[this.activeControl];
-
             },
             isActive(name) {
                 return this.activeControl === name;
             },
+
+            toggleTag(tag) {
+                tag.active = !tag.active;
+                this.pageNumber = 1;
+                this.shownPosts = [];
+                this.fetchData()
+            }
         },
 
         // Watch list
         watch: {
-            processControlsOptions() {},
+            processControlsOptions() {
+            },
 
         },
 
@@ -264,7 +280,7 @@
         beforeMount() {
         },
         created() {
-            if(!this.related.length) {
+            if (!this.related.length) {
                 this.activeControl = this.defaultActive;
 
                 this.posts = {};
@@ -279,12 +295,13 @@
 
                 this.fetchData();
                 this.selectControl(this.defaultActive);
-            }else {
-                for( let i = 0; i < this.related.length; i++)
+            } else {
+                for (let i = 0; i < this.related.length; i++)
                     this.relatedDictList.push({
-                        tag:this.related[i],
-                        active:true
-                    })
+                        tag: this.related[i],
+                        active: true
+                    });
+                this.fetchData();
             }
 
         },
