@@ -40,24 +40,31 @@
                     return (value.length >len && active ) ? value.substr(0 , len) + ' . . .' : value;
             },
             formatDate( date ) {
-                let diff_date = new Date() - date ;
-                let seconds = Math.floor( diff_date / 1000 );
-                if( seconds ===0 )
-                    return 'now';
-                if( seconds < 60  )
-                    return seconds +'s';
-                let minutes = Math.floor( seconds / 60 );
-                if( minutes < 60  )
-                    return minutes + 'm';
-                let hours = Math.floor( minutes / 60 );
-                if( hours < 24  )
-                    return hours + 'h';
-                let days = Math.floor( hours / 24 );
-                if( days < 356  )
-                    return hours + 'd';
-                let years = Math.floor( days / 356 );
-                if( years < 356  )
-                    return years + 'y';
+
+                let seconds = Math.floor((new Date() - date) / 1000);
+
+                let interval = Math.floor(seconds / 31536000);
+
+                if (interval > 1) {
+                    return interval + " years ago";
+                }
+                interval = Math.floor(seconds / 2592000);
+                if (interval > 1) {
+                    return interval + " months ago";
+                }
+                interval = Math.floor(seconds / 86400);
+                if (interval > 1) {
+                    return interval + " days ago";
+                }
+                interval = Math.floor(seconds / 3600);
+                if (interval > 1) {
+                    return interval + " hours ago";
+                }
+                interval = Math.floor(seconds / 60);
+                if (interval > 1) {
+                    return interval + " minutes ago";
+                }
+                return Math.floor(seconds) + " seconds ago";
             }
         },
         computed: {
