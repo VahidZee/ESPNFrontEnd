@@ -18,37 +18,81 @@
 
         >
             <!-- Sign-in Form -->
-            <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage">Sign-in</sui-modal-header>
-            <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage" >
-                    <sui-modal-description
-                            class="view-port"
+            <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage && !showForgetPassword">Sing-In</sui-modal-header>
+            <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage && !showForgetPassword" >
+                <sui-modal-description
+                        class="view-port"
+                >
+                    <sui-message
+                            v-if="error_message"
+                            color="red"
                     >
-                        <sui-message
-                                v-if="error_message"
-                                color="red"
-                        >
-                            {{error_message}}
-                        </sui-message>
-                        <sui-message
-                                v-if="success_message"
-                                color="green"
-                        >
-                            {{success_message}}
-                        </sui-message>
-                        <sui-header>Username</sui-header>
-                        <sui-input placeholder="Username" v-model="username" />
-                        <sui-header>Password</sui-header>
-                        <sui-input placeholder="Password" type="password" v-model="password"/>
-                        <sui-modal-actions>
+                        {{error_message}}
+                    </sui-message>
+                    <sui-message
+                            v-if="success_message"
+                            color="green"
+                    >
+                        {{success_message}}
+                    </sui-message>
+                    <sui-message
+                            color="grey"
+                    >
+                        Fill in your data to sign-in, or hit sign-up to become one of us.
+                    </sui-message>
+                    <sui-header>Username</sui-header>
+                    <sui-input placeholder="Username" v-model="username" />
+                    <sui-header>Password</sui-header>
+                    <sui-input placeholder="Password" type="password" v-model="password"/>
+                    <sui-button fluid @click="forgetPasswordButtonClick"> Forget Password </sui-button>
+                    <sui-modal-actions>
+
                         <sui-button positive @click.native="signInButtonClick">
                             Sign in
                         </sui-button>
                         <sui-button secondary @click.native="toggleSignPage">
                             Sign Up
                         </sui-button>
-                        </sui-modal-actions>
-                    </sui-modal-description>
-                </sui-modal-content>
+                    </sui-modal-actions>
+                </sui-modal-description>
+            </sui-modal-content>
+
+            <!-- Forget Password Form -->
+            <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword">Forget Password</sui-modal-header>
+            <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword" >
+                <sui-modal-description
+                        class="view-port"
+                >
+                    <sui-message
+                            v-if="error_message"
+                            color="red"
+                    >
+                        {{error_message}}
+                    </sui-message>
+                    <sui-message
+                            v-if="success_message"
+                            color="green"
+                    >
+                        {{success_message}}
+                    </sui-message>
+                    <sui-message
+                            color="grey"
+                    >
+                        Fill in your email address and if there was a profile with that email we will send you the procedure to recover your password.
+                    </sui-message>
+                    <sui-header>Email</sui-header>
+                    <sui-input placeholder="Email" v-model="email" />
+                    <sui-modal-actions>
+                        <sui-button positive @click.native="sendForgetPasswordEmailButtonClick">
+                            Send
+                        </sui-button>
+                        <sui-button negative @click.native="forgetPasswordButtonClick">
+                            Cancel
+                        </sui-button>
+                    </sui-modal-actions>
+                </sui-modal-description>
+            </sui-modal-content>
+
             <!-- Sign-Up Form -->
             <sui-modal-header v-if="!this.$store.state.logged_in && !showSignInPage">Sign-Up</sui-modal-header>
             <sui-modal-content v-if="!this.$store.state.logged_in && !showSignInPage" >
@@ -96,6 +140,8 @@
                     </sui-modal-actions>
                 </sui-modal-description>
             </sui-modal-content>
+
+            <!-- Profile Info -->
             <sui-modal-header v-if="this.$store.state.logged_in && this.$store.state.user_has_info">Profile Info</sui-modal-header>
             <sui-modal-content :image="profileHasImage"
                                v-if="this.$store.state.logged_in && this.$store.state.user_has_info"
@@ -154,10 +200,16 @@
         name: "ProfileModal",
         data() {
             return {
+                //models
                 error_message:'',
                 success_message:'',
+
+                //handles
                 modalOpen:false,
                 showSignInPage:true,
+                showForgetPassword:false,
+
+                //Data
                 username:'',
                 password:'',
                 reenter_password:'',
@@ -169,11 +221,13 @@
         components:{
         },
         methods: {
+            // Buttons
             handleProfileModalButtonClick(){
                 this.success_message = '';
                 this.error_message = '';
                 this.modalOpen = !this.modalOpen;
             },
+
             signInButtonClick() {
                 let cred = {
                     username: this.username,
@@ -235,6 +289,15 @@
                         }
                     }
                 )
+            },
+            forgetPasswordButtonClick() {
+                this.showForgetPassword = !this.showForgetPassword;
+                this.email = '';
+                this.error_message = '';
+                this.success_message = '';
+            },
+            sendForgetPasswordEmailButtonClick() {
+
             },
             toggleSignPage() {
                 this.showSignInPage = !this.showSignInPage;
