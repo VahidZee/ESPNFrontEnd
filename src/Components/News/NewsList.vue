@@ -1,19 +1,24 @@
 <template>
     <div class="newsList" :style="listStyle" :class="{ 'related' : related.length }">
         <sui-menu class="controlBar" inverted vertical floated :class="{ 'related-menu' : related.length }">
+            <!-- Menu Title -->
             <sui-menu-item class="controlBarHeader" header>
                 {{ title }}
             </sui-menu-item>
+
+            <!-- Related Tags -->
             <sui-menu-item v-show="related.length" class="controlBarHeader" header>
                 Tags
                 <sui-icon name="long arrow alternate down"></sui-icon>
             </sui-menu-item>
-            <sui-menu-item
-                    v-for="(item, itemKey) in related"
-                    :key="'tag' +itemKey"
-            >
-                {{item.title}}
-            </sui-menu-item>
+                <sui-menu-item
+                        v-for="(item, itemKey) in related"
+                        :key="'tag' +itemKey"
+                >
+                    {{item.title}}
+                </sui-menu-item>
+
+            <!-- Control Options -->
             <sui-menu-item
                     v-show="controlOptions.length && !related.length"
                     v-for="(item, itemKey) in controlOptions"
@@ -24,6 +29,8 @@
             >
                 {{item}}
             </sui-menu-item>
+
+            <!-- Filter Options -->
             <sui-dropdown
                     v-show="filterOptions && !related.length"
                     text="Filter"
@@ -33,11 +40,8 @@
                     :options="filterOptions"
             >
             </sui-dropdown>
-            <sui-menu-item float="bottom">
-                <sui-button @click="fetchData()">
-                    Load More
-                </sui-button>
-            </sui-menu-item>
+
+            <!-- Load More Button -->
         </sui-menu>
         <div class="viewPort" :class="{ 'related' : !related.length }">
             <NewsCard
@@ -46,6 +50,12 @@
                     :news-data="post"
                     v-show="filtered(post)"
             ></NewsCard>
+            <sui-button @click="fetchData()"
+                        style="margin: 20px"
+                        v-if="has_more"
+            >
+                Load More
+            </sui-button>
         </div>
     </div>
 
@@ -120,7 +130,8 @@
                 activeControl: this.defaultActive,
                 activeFilter: null,
                 posts: [],
-                pageNumber: 1
+                pageNumber: 1,
+                has_more:false,
             }
         },
 
@@ -159,8 +170,9 @@
                     )
                     .then(
                         response => {
-                            for (let i = 0; i < response.data.length; i++) {
-                                let temp = response.data[i]
+                            this.has_more = response.data.has_more;
+                            for (let i = 0; i < response.data.list.length; i++) {
+                                let temp = response.data.list[i];
                                 temp.publishDate = new Date(temp.publishDate);
                                 temp.sportType = (temp.sportType == 'F') ? 'Football' : 'Basketball';
                                 this.posts.push(temp)
