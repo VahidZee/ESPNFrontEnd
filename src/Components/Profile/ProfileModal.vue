@@ -59,6 +59,7 @@
             <!-- Forget Password Form -->
             <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword">Forgot Password</sui-modal-header>
             <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword" >
+                <!-- Email Form -->
                 <sui-modal-description
                         class="view-port"
                         v-if="!resetPasswordPage"
@@ -79,11 +80,11 @@
                     <sui-message
                             color="grey"
                     >
-                        Fill in your email address and if there was a profile with that email we will send you with an access token.
+                        Fill in your email address and if there was a profile with that email we will send you  an access token to reset your password.
                     </sui-message>
                     <sui-header>Email</sui-header>
                     <sui-input placeholder="Email" v-model="email" />
-                    <sui-button fluid @click="iHaveAnAccessTokenButtonClick"> I Have an access token </sui-button>
+                    <sui-button fluid @click="iHaveAnForgotAccessTokenButtonClick"> I Have an access token </sui-button>
 
                     <sui-modal-actions>
                         <sui-button positive @click.native="sendForgotPasswordEmailButtonClick">
@@ -95,6 +96,7 @@
                     </sui-modal-actions>
                 </sui-modal-description>
 
+                <!-- Reset Password Form -->
                 <sui-modal-description
                         class="view-port"
                         v-if="resetPasswordPage"
@@ -127,6 +129,7 @@
 
                     <sui-header>Re-Enter Password</sui-header>
                     <sui-input placeholder="Re-Enter Password" type="password" v-model="reenter_password"/>
+                    <sui-button fluid @click="iHaveAnForgotAccessTokenButtonClick"> I Have an access token </sui-button>
 
                     <sui-modal-actions>
                         <sui-button positive @click.native="sendResetPassword">
@@ -142,8 +145,10 @@
             <!-- Sign-Up Form -->
             <sui-modal-header v-if="!this.$store.state.logged_in && !showSignInPage">Sign-Up</sui-modal-header>
             <sui-modal-content v-if="!this.$store.state.logged_in && !showSignInPage" >
+                <!-- Sign Up Form -->
                 <sui-modal-description
                         class="view-port"
+                        v-if="!activationKeyForm"
                         scrolling
                 >
                     <sui-message
@@ -157,6 +162,13 @@
                             color="green"
                     >
                         {{success_message}}
+                    </sui-message>
+                    <sui-message
+                            color="grey"
+                    >
+                        Fill in your data and become one of us! ( note that all the fields are required )
+                        <br>
+                        For further security an email with an activation key will be sent to you after submiting this form.
                     </sui-message>
                     <sui-header>Username</sui-header>
                     <sui-input placeholder="Username" v-model="username" />
@@ -175,6 +187,7 @@
 
                     <sui-header>Email</sui-header>
                     <sui-input placeholder="Email" v-model="email" type="email" />
+                    <sui-button fluid @click="iHaveActivationKeyButtonClick"> I Have an activation key </sui-button>
 
                     <sui-modal-actions>
                         <sui-button positive @click.native="signUpButtonClick">
@@ -182,6 +195,44 @@
                         </sui-button>
                         <sui-button secondary @click.native="toggleSignPage">
                             Sign in
+                        </sui-button>
+                    </sui-modal-actions>
+                </sui-modal-description>
+
+                <!-- Account Activation -->
+                <sui-modal-description
+                        class="view-port"
+                        v-if="activationKeyForm"
+
+                >
+                    <sui-message
+                            v-if="error_message"
+                            color="red"
+                    >
+                        {{error_message}}
+                    </sui-message>
+                    <sui-message
+                            v-if="success_message"
+                            color="green"
+                    >
+                        {{success_message}}
+                    </sui-message>
+
+                    <sui-message
+                            color="grey"
+                    >
+                        Enter The activation token sent to your email to activate your account.
+                    </sui-message>
+
+                    <sui-header>Activation Token</sui-header>
+                    <sui-input placeholder="Token" v-model="access_token" />
+
+                    <sui-modal-actions>
+                        <sui-button positive @click.native="sendActivationKey">
+                            Activate Account
+                        </sui-button>
+                        <sui-button negative @click.native="iHaveActivationKeyButtonClick">
+                            Cancel
                         </sui-button>
                     </sui-modal-actions>
                 </sui-modal-description>
@@ -255,7 +306,7 @@
                 showSignInPage:true,
                 showForgetPassword:false,
                 resetPasswordPage:false,
-
+                activationKeyForm:false,
                 //Data
                 username:'',
                 password:'',
@@ -276,26 +327,27 @@
                 this.modalOpen = !this.modalOpen;
             },
 
-            signInButtonClick() {
+            // Sign out
+            signOutButtonClick() {
                 let cred = {
-                    username: this.username,
-                    password: this.password
+                    'token': this.$store.state.token
                 };
                 axios.post(
-                    this.$store.state.backEndUrl + 'users/login' , cred
+                    this.$store.state.backEndUrl + 'users/logout' , cred
                 ).then(
                     response => {
-                        if( response.data.ok ) {
-                            this.success_message = 'Logged in Successfully';
-                            this.error_message = '';
-
-                            this.$store.commit('LOGGED_IN',response.data.token);
-                        }
-                        else
+                        if( !response.data.ok )
                             this.error_message = response.data.description;
+                        else {
+                            this.$store.commit('LOGGED_OUT',response.data.token);
+                            this.success_message = response.data.description;
+
+                        }
                     }
-                );
+                )
             },
+
+            // Sign Up
             signUpButtonClick() {
                 if(this.password != this.reenter_password ) {
                     this.error_message = 'Password didn\'t match its re-entered value';
@@ -321,23 +373,42 @@
                     }
                 )
             },
-            signOutButtonClick() {
+            iHaveActivationKeyButtonClick() {
+                this.access_token = '';
+                this.activationKeyForm = !this.activationKeyForm;
+                this.error_message = '';
+                this.success_message = '';
+            },
+            sendActivationKey() {
+                this.access_token = '';
+
+            },
+
+            //Sign In functions
+            toggleSignPage() {
+                this.showSignInPage = !this.showSignInPage;
+                this.success_message = '';
+                this.error_message = '';
+            },
+            signInButtonClick() {
                 let cred = {
-                    'token': this.$store.state.token
+                    username: this.username,
+                    password: this.password
                 };
                 axios.post(
-                    this.$store.state.backEndUrl + 'users/logout' , cred
+                    this.$store.state.backEndUrl + 'users/login' , cred
                 ).then(
                     response => {
-                        if( !response.data.ok )
-                            this.error_message = response.data.description;
-                        else {
-                            this.$store.commit('LOGGED_OUT',response.data.token);
-                            this.success_message = response.data.description;
+                        if( response.data.ok ) {
+                            this.success_message = 'Logged in Successfully';
+                            this.error_message = '';
 
+                            this.$store.commit('LOGGED_IN',response.data.token);
                         }
+                        else
+                            this.error_message = response.data.description;
                     }
-                )
+                );
             },
 
             forgotPasswordButtonClick() {
@@ -351,7 +422,7 @@
                 this.password = '';
                 this.reenter_password = '';
             },
-            iHaveAnAccessTokenButtonClick(){
+            iHaveAnForgotAccessTokenButtonClick(){
                 this.access_token = '';
                 this.success_message = '';
                 this.error_message = '';
@@ -360,7 +431,6 @@
                 this.password = '';
                 this.reenter_password = '';
             },
-
             sendForgotPasswordEmailButtonClick() {
                 this.success_message = '';
                 this.error_message = '';
@@ -380,7 +450,6 @@
                     }
                 )
             },
-
             sendResetPassword() {
                 if(this.password != this.reenter_password ) {
                     this.error_message = 'Password didn\'t match its re-entered value';
@@ -418,11 +487,7 @@
                 )
             },
 
-            toggleSignPage() {
-                this.showSignInPage = !this.showSignInPage;
-                this.success_message = '';
-                this.error_message = '';
-            }
+
         },
         computed:{
             profileModalButtonIcon() {
