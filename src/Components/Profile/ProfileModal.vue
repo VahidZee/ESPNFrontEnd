@@ -44,9 +44,8 @@
                     <sui-input placeholder="Username" v-model="username" />
                     <sui-header>Password</sui-header>
                     <sui-input placeholder="Password" type="password" v-model="password"/>
-                    <sui-button fluid @click="forgetPasswordButtonClick"> Forget Password </sui-button>
+                    <sui-button fluid @click="forgotPasswordButtonClick"> Forgot Password </sui-button>
                     <sui-modal-actions>
-
                         <sui-button positive @click.native="signInButtonClick">
                             Sign in
                         </sui-button>
@@ -58,10 +57,12 @@
             </sui-modal-content>
 
             <!-- Forget Password Form -->
-            <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword">Forget Password</sui-modal-header>
+            <sui-modal-header v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword">Forgot Password</sui-modal-header>
             <sui-modal-content v-if="!this.$store.state.logged_in && showSignInPage && showForgetPassword" >
                 <sui-modal-description
                         class="view-port"
+                        v-if="!resetPasswordPage"
+
                 >
                     <sui-message
                             v-if="error_message"
@@ -78,15 +79,60 @@
                     <sui-message
                             color="grey"
                     >
-                        Fill in your email address and if there was a profile with that email we will send you the procedure to recover your password.
+                        Fill in your email address and if there was a profile with that email we will send you with an access token.
                     </sui-message>
                     <sui-header>Email</sui-header>
                     <sui-input placeholder="Email" v-model="email" />
+                    <sui-button fluid @click="iHaveAnAccessTokenButtonClick"> I Have an access token </sui-button>
+
                     <sui-modal-actions>
-                        <sui-button positive @click.native="sendForgetPasswordEmailButtonClick">
+                        <sui-button positive @click.native="sendForgotPasswordEmailButtonClick">
                             Send
                         </sui-button>
-                        <sui-button negative @click.native="forgetPasswordButtonClick">
+                        <sui-button negative @click.native="forgotPasswordButtonClick">
+                            Cancel
+                        </sui-button>
+                    </sui-modal-actions>
+                </sui-modal-description>
+
+                <sui-modal-description
+                        class="view-port"
+                        v-if="resetPasswordPage"
+
+                >
+                    <sui-message
+                            v-if="error_message"
+                            color="red"
+                    >
+                        {{error_message}}
+                    </sui-message>
+                    <sui-message
+                            v-if="success_message"
+                            color="green"
+                    >
+                        {{success_message}}
+                    </sui-message>
+
+                    <sui-message
+                            color="grey"
+                    >
+                        Enter The access token sent to your email and choose your new password.
+                    </sui-message>
+
+                    <sui-header>Access Token</sui-header>
+                    <sui-input placeholder="Token" v-model="access_token" />
+
+                    <sui-header>Password</sui-header>
+                    <sui-input placeholder="Password" type="password" v-model="password"/>
+
+                    <sui-header>Re-Enter Password</sui-header>
+                    <sui-input placeholder="Re-Enter Password" type="password" v-model="reenter_password"/>
+
+                    <sui-modal-actions>
+                        <sui-button positive @click.native="sendResetPassword">
+                            Send
+                        </sui-button>
+                        <sui-button negative @click.native="forgotPasswordButtonClick">
                             Cancel
                         </sui-button>
                     </sui-modal-actions>
@@ -208,6 +254,7 @@
                 modalOpen:false,
                 showSignInPage:true,
                 showForgetPassword:false,
+                resetPasswordPage:false,
 
                 //Data
                 username:'',
@@ -216,6 +263,7 @@
                 first_name:'',
                 last_name:'',
                 email:'',
+                access_token:''
             }
         },
         components:{
@@ -290,15 +338,85 @@
                     }
                 )
             },
-            forgetPasswordButtonClick() {
+
+            forgotPasswordButtonClick() {
+                this.success_message = '';
+                this.error_message = '';
                 this.showForgetPassword = !this.showForgetPassword;
+                this.resetPasswordPage = false;
                 this.email = '';
                 this.error_message = '';
                 this.success_message = '';
+                this.password = '';
+                this.reenter_password = '';
             },
-            sendForgetPasswordEmailButtonClick() {
+            iHaveAnAccessTokenButtonClick(){
+                this.access_token = '';
+                this.success_message = '';
+                this.error_message = '';
+                this.resetPasswordPage = !this.resetPasswordPage;
+                this.email = '';
+                this.password = '';
+                this.reenter_password = '';
+            },
 
+            sendForgotPasswordEmailButtonClick() {
+                this.success_message = '';
+                this.error_message = '';
+                let data = {
+                    'email': this.email
+                };
+                axios.post(
+                    this.$store.state.backEndUrl + 'users/forgot_password' , data
+                ).then(
+                    response => {
+                        if( !response.data.ok )
+                            this.error_message = response.data.description;
+                        else {
+                            this.success_message = response.data.description;
+                            this.resetPasswordPage = true;
+                        }
+                    }
+                )
             },
+
+            sendResetPassword() {
+                if(this.password != this.reenter_password ) {
+                    this.error_message = 'Password didn\'t match its re-entered value';
+                    return
+                }
+
+                if(this.access_token == '') {
+                    this.error_message = 'No valid access Token was provided';
+                    return
+                }
+
+                let cred = {
+                    forgot_access_token:this.access_token,
+                    password: this.password,
+                };
+
+                this.success_message = '';
+                this.error_message = '';
+
+                axios.post(
+                    this.$store.state.backEndUrl + 'users/reset_password' , cred
+                ).then(
+                    response => {
+                        if( !response.data.ok )
+                            this.error_message = response.data.description;
+                        else{
+                            this.success_message = response.data.description;
+                            this.showSignInPage = true;
+                            this.email = '';
+                            this.password = '';
+                            this.reenter_password ='';
+                            this.showForgetPassword = false;
+                        }
+                    }
+                )
+            },
+
             toggleSignPage() {
                 this.showSignInPage = !this.showSignInPage;
                 this.success_message = '';
