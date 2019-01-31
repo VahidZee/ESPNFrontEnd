@@ -41,18 +41,21 @@
             >
             </sui-dropdown>
 
-            <!-- Load More Button -->
         </sui-menu>
+        <!-- View Port -->
         <div class="viewPort" :class="{ 'related' : !related.length }">
+            <!-- News Cards-->
             <NewsCard
-                    v-for="post in posts"
+                    v-for="post in shownPosts"
                     :key="post.id"
                     :news-data="post"
                     v-show="filtered(post)"
             ></NewsCard>
+
+            <!-- Load More Button -->
             <sui-button @click="fetchData()"
                         style="margin: 20px"
-                        v-if="has_more"
+                        v-if="controlsData[activeControl].has_more"
             >
                 Load More
             </sui-button>
@@ -114,7 +117,7 @@
             },
             'auth': {
                 type: Boolean,
-                default: false
+                default: true
             },
             'related': {
                 type: Array,
@@ -129,8 +132,9 @@
             return {
                 activeControl: this.defaultActive,
                 activeFilter: null,
-                posts: [],
-                pageNumber: 1,
+                posts: {},
+                shownPosts : [],
+                controlsData: {},
                 has_more:false,
             }
         },
@@ -160,28 +164,31 @@
                 if (!(this.activeFilter === null) && (this.activeControl === 'Recent'))
                     return this.activeFilter === post.sportType;
                 return this.activeFilter === post.sportType && post.isSubscribed;
-
             },
             //Data Fetching
-            fetchData() {
+            fetchData(tab) {
+                if( !tab )
+                    tab = this.activeControl;
                 axios
                     .get(
-                        this.$store.getters.NewsBackEndURL + '?type=recent&page=' + this.pageNumber++
+                        this.$store.getters.NewsBackEndURL + '?type=recent&page=' + this.controlsData[tab].pageNumber
                     )
                     .then(
                         response => {
-                            this.has_more = response.data.has_more;
+                            this.controlsData[tab].pageNumber++;
+                            this.controlsData[tab].has_more = response.data.has_more;
                             for (let i = 0; i < response.data.list.length; i++) {
                                 let temp = response.data.list[i];
                                 temp.publishDate = new Date(temp.publishDate);
                                 temp.sportType = (temp.sportType == 'F') ? 'Football' : 'Basketball';
-                                this.posts.push(temp)
+                                this.posts[tab].push(temp)
                             }
                         }
                     )
             },
             //ControlBar Methods
             selectControl(item) {
+                this.shownPosts = this.posts[item];
                 if (item === 'Subscribed')
                     this.activeControl = (this.auth) ? item : this.activeControl;
                 else
@@ -193,9 +200,22 @@
         },
 
         //Events
+        beforeMount() {
+            this.activeControl = this.defaultActive;
+        },
         created() {
-            this.fetchData()
-        }
+            this.posts = {};
+            for(let i = 0; i < this.controlOptions.length ; i++ ){
+                this.posts[this.controlOptions[i]] = [];
+                this.controlsData[this.controlOptions[i]] = {
+                    pageNumber : 1,
+                    has_more: true
+                }
+            }
+
+            this.fetchData(this.activeControl);
+            this.selectControl(this.defaultActive);
+        },
     }
 </script>
 
