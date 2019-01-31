@@ -286,8 +286,9 @@
                 ).then(
                     response => {
                         if( response.data.ok ) {
-                            this.success_message = '';
+                            this.success_message = 'Logged in Successfully';
                             this.error_message = '';
+
                             this.$store.commit('LOGGED_IN',response.data.token);
                         }
                         else
