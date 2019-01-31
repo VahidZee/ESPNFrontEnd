@@ -265,7 +265,9 @@
                         {{success_message}}
                     </sui-message>
                     <sui-header>Username</sui-header>
-                    <sui-input placeholder="Username" :value="this.$store.state.user.username" />
+                    <sui-modal-content placeholder="Username"  >
+                    {{this.$store.state.user.username}}
+                    </sui-modal-content>
                     <!--<sui-header>Password</sui-header>-->
                     <!--<sui-input placeholder="Password" type="password" v-model="password"/>-->
                     <sui-header>First Name</sui-header>
@@ -273,18 +275,21 @@
                     <sui-header>Last Name</sui-header>
                     <sui-input placeholder="Last Name" :value="this.$store.state.user.last_name" />
                     <sui-header>Email</sui-header>
-                    <sui-input placeholder="Email" :value="this.$store.state.user.email" type="email" />
-
+                    <sui-modal-content  >{{this.$store.state.user.email}}</sui-modal-content>
+                    <sui-header>Change Profile Picture</sui-header>
+                    <sui-input type="file"></sui-input>
+                    <sui-modal-actions>
+                        <sui-button positive @click.native="toggleSignPage">
+                            Save Profile
+                        </sui-button>
+                        <sui-button negative @click.native="signOutButtonClick">
+                            Sign Out
+                        </sui-button>
+                    </sui-modal-actions>
                 </sui-modal-description>
+
             </sui-modal-content>
-            <sui-modal-actions v-if="this.$store.state.logged_in && this.$store.state.user_has_info" >
-                <sui-button positive @click.native="toggleSignPage">
-                    Save Profile
-                </sui-button>
-                <sui-button negative @click.native="signOutButtonClick">
-                    Sign Out
-                </sui-button>
-            </sui-modal-actions>
+
 
         </sui-modal>
     </div>
@@ -292,6 +297,7 @@
 
 <script>
     import axios from 'axios'
+    import SuiModalContent from "semantic-ui-vue/dist/commonjs/modules/Modal/ModalContent";
 
     export default {
         name: "ProfileModal",
@@ -307,6 +313,7 @@
                 showForgetPassword:false,
                 resetPasswordPage:false,
                 activationKeyForm:false,
+
                 //Data
                 username:'',
                 password:'',
@@ -318,6 +325,7 @@
             }
         },
         components:{
+            SuiModalContent
         },
         methods: {
             // Buttons

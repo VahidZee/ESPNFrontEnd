@@ -63,7 +63,7 @@ export const store = new Vuex.Store({
                 this.state.backEndUrl + 'users/getMe' , cred
             ).then(
                 response => {
-                    // console.log(response.data);
+                    console.log(response.data);
                     this.commit('CHANGE_USER_INFO', response.data)
                 }
             )
