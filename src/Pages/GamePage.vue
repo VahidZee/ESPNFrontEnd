@@ -53,16 +53,16 @@
     import EventTable from "../Components/EventTable/EventTable";
     import LiveReport from "../Components/LiveReport/LiveReport";
     import Multimedia from "../Components/Multimedia/Multimedia";
-    // import EventTimeData from "../Components/TimeLine/EventTimeData.js"
-    // import Timeline from "../Components/TimeLine/Timeline"
+    import EventTimeData from "../Components/TimeLine/EventTimeData.js"
+    import Timeline from "../Components/TimeLine/Timeline"
     import GameCard from "@/Components/Games/GameCard";
     import Divider from "@/Components/PageDivider/Divider";
     import NewsList from "@/Components/News/NewsList";
     import CommentsList from "@/Components/Comments/CommentsList";
     import PlayerList from "@/Components/Players/PlayerList";
-
-    import EventTimeData from "../Components/Timeline/EventTimeData.js"
-    import Timeline from "../Components/Timeline/Timeline"
+    //
+    // import EventTimeData from "../Components/Timeline/EventTimeData.js"
+    // import Timeline from "../Components/Timeline/Timeline"
 
     export default {
         name: "GamePage",

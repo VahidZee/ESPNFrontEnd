@@ -117,6 +117,7 @@
             <news-list  title="Related News"
                         :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
                         :related="newsData.tags"
+                        type="related"
             ></news-list>
 
             <divider
