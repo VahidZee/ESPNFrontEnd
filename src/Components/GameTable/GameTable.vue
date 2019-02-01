@@ -9,7 +9,7 @@
                 </sui-table-row>
             </sui-table-header>
             <sui-table-body >
-                <TableRow v-for="t in teams" :key="t.id" :team-name="t.teamName" :score="t.score" :games="t.games"></TableRow>
+                <TableRow v-for="t in teams" :key="t.id" :team-name="t.name" :score="t.score" :games="t.games"></TableRow>
             </sui-table-body>
         </sui-table>
         <sui-button color="blue" inverted @click="sortByName">Sort By Team Name</sui-button>
@@ -31,7 +31,7 @@
 
         data() {
             return {
-                teams: [new GameTableData("Esteghlal", 30, 15), new GameTableData("Perspolis", 40, 16), new GameTableData("Sepahan", 15, 9)]
+                // teams: [new GameTableData("Esteghlal", 30, 15), new GameTableData("Perspolis", 40, 16), new GameTableData("Sepahan", 15, 9)]
             }
         },
 

@@ -11,7 +11,6 @@ export const store = new Vuex.Store({
         token: '',
         user: null,
         backEndUrl: 'http://localhost:8000/'
-
     },
     mutations: {
         LOGGED_IN( state, token ) {

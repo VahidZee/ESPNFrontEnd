@@ -8,25 +8,25 @@
                 <td style="width: 70%">
                     <table class="ProfileInfo">
                         <tr>
-                            <th class="ProfileName" colspan="3">{{name}}</th>
+                            <th class="ProfileName" colspan="3">{{response.name}}</th>
                         </tr>
                        <div></div>
                         <tr style="font-size: 18px">
-                            <td style="border-right: thin #b2b2b2 solid; padding: 0 2%">10 Forward</td>
-                            <td style="border-right: thin #b2b2b2 solid; padding: 0 2%">5'6", 148 lbs</td>
+                            <!--<td style="border-right: thin #b2b2b2 solid; padding: 0 2%">10 Forward</td>-->
+                            <!--<td style="border-right: thin #b2b2b2 solid; padding: 0 2%">5'6", 148 lbs</td>-->
                             <td style="color: white; padding: 0 2%">
                                 <a href="">
-                                    FC Barcelona
+                                    {{ response.team_name }}
                                 </a>
                             </td>
                         </tr>
-                        <tr>
+                        <tr v-if="response.born">
                             <td style="color: #b2b2b2">Born</td>
-                            <td colspan="2">June 24, 1987 in Santa Fe, Argentina (Age: 31)</td>
+                            <td colspan="2">{{ response.born }}</td>
                         </tr>
                         <tr>
                             <td style="color: #b2b2b2">Experience</td>
-                            <td colspan="2">15 years</td>
+                            <td colspan="2">{{ response.expe}} years</td>
                         </tr>
                     </table>
                 </td>
