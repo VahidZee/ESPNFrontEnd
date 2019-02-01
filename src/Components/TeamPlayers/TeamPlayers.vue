@@ -1,13 +1,8 @@
 <template>
     <div :style="teamBack" class="team">
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random6"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random7"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random1"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random2"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random3"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random4"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random5"></TeamPl>
-        <TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random8"></TeamPl>
+        <TeamPl v-for="player in resp.players" v-bind:player-name="player.name" v-bind:post="player.post"
+                v-bind:img-src= "player.image"></TeamPl>
+        <!--<TeamPl player-name="Name!!!" post="post" img-src= "https://picsum.photos/200/200/?random8"></TeamPl>-->
     </div>
 </template>
 

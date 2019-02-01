@@ -1,4 +1,4 @@
-<template>
+w<template>
     <div class="cnt">
         <table class="StatsTable">
             <tr>
@@ -16,100 +16,17 @@
                 <td>PFPG</td>
                 <td>PPG</td>
             </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">1</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">2</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-            </tr><tr>
-            <td style="font-weight: bold; color: #5f5f5f">3</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
-        </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">4</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">5</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">6</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">7</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td style="font-weight: bold; color: #5f5f5f">8</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+            <tr v-for="stat in stats">
+                <td style="font-weight: bold; color: #5f5f5f">{{ stat.season }}</td>
+                <td>{{ stat.GP }}</td>
+                <td>{{ stat.MPG }}</td>
+                <td>{{ stat.FG }}</td>
+                <td>{{ stat.APG }}</td>
+                <td>{{ stat.RPG }}</td>
+                <td>{{ stat.BLKPG }}</td>
+                <td>{{ stat.STPG }}</td>
+                <td>{{ stat.PFPG }}</td>
+                <td>{{ stat.PPG }}</td>
             </tr>
         </table>
     </div>

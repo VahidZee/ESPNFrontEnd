@@ -1,9 +1,9 @@
 <template>
     <div :style="backgroundHandle">
-            <ProfilePlayer photo-n="url('/Photos/BG2.jpg')" photo-p="url('/Photos/profile2.png')" name="Lionel Messi"></ProfilePlayer>
+            <ProfilePlayer photo-n="url('/Photos/BG2.jpg')" v-bind:photo-p="url(image)" v-bind:player="response"></ProfilePlayer>
             <!--<ProfilePlayer photo-n="url('/Photos/BG.jpg')" photo-p="url('Photos/profile.png')" name="LeBron James"></ProfilePlayer>-->
-            <Stats></Stats>
-            <PlayerNews news-image="url('Photos/news2.jpg')" name="Lionel Messi"></PlayerNews>
+            <Stats v-bind:stats=stats></Stats>
+            <!--<PlayerNews news-image="url('Photos/news2.jpg')" name="Lionel Messi"></PlayerNews>-->
             <div style="margin: 5rem"></div>
             <NewsList title="Player News"></NewsList>
             <!--<PlayerNews news-image="url('Photos/news.jpg')" name="Lebron James"></PlayerNews>-->
@@ -22,7 +22,11 @@
         components: {NewsList, PlayerNews, Stats, ProfilePlayer},
         data() {
             return {
-                backgroundImage: "url('/Images/bg36.jpeg')"
+                id : 1,
+                backgroundImage: "url('/Images/bg36.jpeg')",
+                response: "",
+                image: "",
+                stats: "",
             }
         },
 
@@ -37,7 +41,26 @@
                     backgroundPosition: 'center'
                 }
             }
-        }
+        },
+
+        methods: {
+            getPlayerData() {
+                axios.post(this.$store.getters.NewsBackEndURL + this.$route.params.id)
+                    .then(response => {
+                        this.response = response.data;
+                        this.stats = this.response.stats
+                        this.image = '/Photos/' + this.response.image
+                    })
+                    .catch(error => {
+                        //TODO 404
+                        console.log(error)
+                        // this.errored = true
+                    })
+            },
+        },
+        beforeMount() {
+            this.getPlayerData()
+        },
     }
 </script>
 

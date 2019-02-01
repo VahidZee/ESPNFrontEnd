@@ -1,26 +1,26 @@
 <template>
     <div class="newsPage">
         <div v-if="newsData">
-            <div  class="content-container " style="position: sticky;top:5px">
+            <div class="content-container " style="position: sticky;top:5px">
                 <sui-container text>
-                    <div >
-                        <h2 class="content-header" >
+                    <div>
+                        <h2 class="content-header">
                             {{newsData.title}}
                         </h2>
                         <span class="content-header-info">
 
-                        <sui-icon shape="circular" name="calendar alternate outline icon" ></sui-icon>
+                        <sui-icon shape="circular" name="calendar alternate outline icon"></sui-icon>
                         {{ newsData.publishDate | formatDate}}
-                        <sui-label v-show="newsData.isSubscribed" size="tiny" color="black" >
+                        <sui-label v-show="newsData.isSubscribed" size="tiny" color="black">
                             Subscribed
                         </sui-label>
                     </span>
                     </div>
                 </sui-container>
             </div>
-            <div  class="content-container content-header">
+            <div class="content-container content-header">
                 <sui-container text v-show="newsData.tags.length">
-                <span  >
+                <span>
                     Tags :
                 </span>
 
@@ -29,7 +29,7 @@
                             :key="'tag' + i"
                             :to="'/' + tag.type + '/' + tag.id"
                     >
-                        <sui-button size="tiny" :content="tag.title" :color="tagColor(tag.type)" style="margin: 2px" />
+                        <sui-button size="tiny" :content="tag.title" :color="tagColor(tag.type)" style="margin: 2px"/>
                     </router-link>
                 </sui-container>
             </div>
@@ -64,7 +64,7 @@
                     height="4vh"
                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
-            <div class="content-container" >
+            <div class="content-container">
                 <sui-container text>
                     <p
                             v-for="(text, i ) in newsData.paragraphs"
@@ -77,9 +77,9 @@
             <divider height="2vh"
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
-            <div  class="content-container content-header">
+            <div class="content-container content-header">
                 <sui-container text v-show="newsData.tags.length">
-                <span  >
+                <span>
                     Resources :
                 </span>
 
@@ -88,12 +88,12 @@
                             :key="'rec' + i"
                             :href="rec.link"
                     >
-                        <sui-button size="tiny" :content="rec.title" style="margin: 2px;"  />
+                        <sui-button size="tiny" :content="rec.title" style="margin: 2px;"/>
                     </a>
                 </sui-container>
             </div>
-            <divider  height="2vh"
-                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+            <divider height="2vh"
+                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
 
             />
 
@@ -102,9 +102,9 @@
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
 
-            <news-list  title="Related News"
-                        :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
-                        :related="newsData.tags"
+            <news-list title="Related News"
+                       :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+                       :related="newsData.tags"
             ></news-list>
 
             <divider
@@ -125,17 +125,17 @@
     export default {
         name: "NewsPage",
         components: {CommentsList, NewsList, Divider},
-        data () {
+        data() {
             return {
-                newsData : null,
+                newsData: null,
                 slide: 0,
                 sliding: null
             }
         },
         props: {
-            'background-image' : {
-                type : String ,
-                default : "url('./Images/'"
+            'background-image': {
+                type: String,
+                default: "url('./Images/'"
             }
         },
         methods: {
@@ -146,7 +146,7 @@
                     .get(this.$store.getters.NewsBackEndURL + this.$route.params.id)
                     .then(response => {
                         let temp = response.data;
-                        temp.publishDate = new Date( temp.publishDate );
+                        temp.publishDate = new Date(temp.publishDate);
                         this.newsData = temp;
                     })
                     .catch(error => {
@@ -156,24 +156,24 @@
                     })
             },
             //Styling
-            tagColor( tagType ) {
-                if( tagType === 'P')
+            tagColor(tagType) {
+                if (tagType === 'P')
                     return 'blue';
-                if( tagType === 'T')
+                if (tagType === 'T')
                     return 'green';
-                if( tagType === 'G')
+                if (tagType === 'G')
                     return 'red';
                 return 'black'
             },
             tagNames() {
                 let arr = [];
-                for(  let shit in this.newsData.tags )
-                    arr.push[ shit.title ];
+                for (let shit in this.newsData.tags)
+                    arr.push[shit.title];
                 return arr;
             },
         },
         filters: {
-            formatDate( date ) {
+            formatDate(date) {
                 let monthNames = [
                     "Jan", "Feb", "Mar",
                     "Apr", "May", "Jun", "Jul",
@@ -191,7 +191,7 @@
             this.fetchData()
         },
         watch: {
-            $route( ) {
+            $route() {
                 this.fetchData();
             }
         }
@@ -199,21 +199,24 @@
 </script>
 
 <style>
-    .newsPage{
+    .newsPage {
         position: static;
         top: 5px;
     }
-    .content-container{
+
+    .content-container {
         width: 100vw;
         text-align: justify;
         padding: 10px;
     }
-    .content-header{
+
+    .content-header {
         font-style: italic;
         font-weight: bolder;
         display: inline-block;
     }
-    .content-header-info{
+
+    .content-header-info {
         float: right;
     }
 </style>

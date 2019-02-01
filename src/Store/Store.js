@@ -9,7 +9,6 @@ export const store = new Vuex.Store({
         token: '',
         username: '',
         backEndUrl: 'http://localhost:8000/'
-
     },
     mutations: {
 

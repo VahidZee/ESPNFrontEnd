@@ -8,7 +8,7 @@
                 <div class="item-child">
                     <div class="item">
                         <div class="item-parent">
-                            <TourCell team-f="Team1" team-s="Team2" score-f="3" score-s="4"></TourCell>
+                            <TourCell team-f="Teamm1" team-s="Team2" score-f="3" score-s="4"></TourCell>
                         </div>
                         <div class="item-childrens">
                             <div class="item-child">
@@ -18,26 +18,43 @@
                                     </div>
                                     <div class="item-childrens">
                                         <div class="item-child">
-                                            <TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>
+                                            <TourCell team-f="Brazilll" team-s="Mexico" score-f="5"
+                                                      score-s="9"></TourCell>
                                         </div>
                                         <div class="item-child">
-                                            <TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>
+                                            <TourCell team-f="Brazil" team-s="Mexico" score-f="5"
+                                                      score-s="9"></TourCell>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="item-child">
-                                <TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>
+                                <div class="item">
+                                    <div class="item-parent">
+                                        <TourCell team-f="Team1" team-s="Team2" score-f="3" score-s="4"></TourCell>
+                                    </div>
+                                    <div class="item-childrens">
+                                        <div class="item-child">
+                                            <TourCell team-f="Brazilll" team-s="Mexico" score-f="5"
+                                                      score-s="9"></TourCell>
+                                        </div>
+                                        <div class="item-child">
+                                            <TourCell team-f="Brazil" team-s="Mexico" score-f="5"
+                                                      score-s="9"></TourCell>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 <div class="item-child">
                     <div class="item">
                         <div class="item-parent">
-                            <TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>
+                            <TourCell team-f="Brazilllll" team-s="Mexico" score-f="5" score-s="9"></TourCell>
                         </div>
-                        <div class="item-matched">
+                        <div class="item-children">
                             <div class="item-child">
                                 <div class="item">
                                     <div class="item-parent">
@@ -45,17 +62,35 @@
                                     </div>
                                     <div class="item-childrens">
                                         <div class="item-child">
-                                            <TourCell team-f="Spain" team-s="France" score-f="1" score-s="2"></TourCell>
+                                            <TourCell team-f="Spainn" team-s="France" score-f="1"
+                                                      score-s="2"></TourCell>
                                         </div>
 
                                         <div class="item-child">
-                                            <TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>
+                                            <TourCell team-f="Brazill" team-s="Mexico" score-f="5"
+                                                      score-s="9"></TourCell>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="item-child">
-                                <TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>
+                                <!--<TourCell team-f="Brazil" team-s="Mexico" score-f="5" score-s="9"></TourCell>-->
+                                <div class="item">
+                                    <div class="item-parent">
+                                        <TourCell team-f="woah" team-s="rrrrrr" score-f="5" score-s="9"></TourCell>
+                                    </div>
+                                    <div class="item-childrens">
+                                        <div class="item-child">
+                                            <TourCell team-f="Spainn" team-s="France" score-f="1"
+                                                      score-s="2"></TourCell>
+                                        </div>
+
+                                        <div class="item-child">
+                                            <TourCell team-f="Brazill" team-s="Mexico" score-f="5"
+                                                      score-s="9"></TourCell>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,6 +104,7 @@
 
 <script>
     import TourCell from "./TourCell";
+
     export default {
         name: "Tournament",
         components: {TourCell},
@@ -76,10 +112,10 @@
             'background-image': String
         },
         computed: {
-            backgroundHandle : function () {
+            backgroundHandle: function () {
                 return {
-                    backgroundImage : this.backgroundImage,
-                    backgroundAttachment : 'fixed',
+                    backgroundImage: this.backgroundImage,
+                    backgroundAttachment: 'fixed',
                     backgroundSize: 'cover',
                     backgroundRepeat: 'no-repeat',
                     backgroundPosition: 'center'
@@ -93,7 +129,7 @@
 
     .whole {
         display: flex;
-        height: 600px;
+        height: 730px;
         justify-content: center;
     }
 
@@ -101,18 +137,21 @@
         display: flex;
         flex-direction: row-reverse;
     }
+
     .item p {
         padding: 20px;
         margin: 0;
         background-color: rgba(59, 147, 255, 0.7);
         border-radius: 2rem;
     }
+
     .item-parent {
         position: relative;
         margin-left: 50px;
         display: flex;
         align-items: center;
     }
+
     .item-parent:after {
         position: absolute;
         content: "";
@@ -123,11 +162,7 @@
         background-color: #fff;
         transform: translateX(-100%);
     }
-    .item-matched {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+
     .item-child {
         display: flex;
         align-items: flex-start;
@@ -136,6 +171,7 @@
         margin-bottom: 10px;
         position: relative;
     }
+
     .item-child:before {
         content: "";
         position: absolute;
@@ -146,6 +182,7 @@
         width: 25px;
         height: 2px;
     }
+
     .item-child:after {
         content: "";
         position: absolute;
@@ -155,9 +192,11 @@
         width: 2px;
         top: 50%;
     }
+
     .item-child:last-child:after {
         transform: translateY(-100%);
     }
+
     .item-child:only-child:after {
         display: none;
     }

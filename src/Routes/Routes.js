@@ -43,7 +43,7 @@ export const routes = [
         }
     },
     {
-        path: '/player',
+        path: '/player/:id',
         component: PlayerPage,
         meta: {
             title: 'ESPN - Players',

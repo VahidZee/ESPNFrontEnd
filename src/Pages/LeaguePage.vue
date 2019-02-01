@@ -24,8 +24,30 @@
     import MatchTable from "../Components/MatchTable/MatchTable";
     export default {
         name: "LeaguePage",
-        components: { MatchTable, Tournament, GameTable}
+        components: { MatchTable, Tournament, GameTable},
+        data() {
+           return {
+               id: 1,
+               j: null,
+               matches: null,
+               teams: null
+           }
+        },
+        methods: {
+            getLeague() {
+                axios.post('' + id, 'profile')
+                    .then(res => {
+                        let json_res = res.json()
+                        this.matches = json_res.matches
+                    })
+                    .catch(err => {
+                        console.log(err)
+                    })
+
+            }
+        }
     }
+
 
 </script>
 

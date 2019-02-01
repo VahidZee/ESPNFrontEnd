@@ -1,4 +1,6 @@
 import Vue from 'vue'
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 
 
 
@@ -11,6 +13,7 @@ import Vuex from 'vuex'
 Vue.use(BootstrapVue);
 Vue.use(VueRouter);
 Vue.use(SuiVue);
+Vue.use(VueAxios, axios)
 
 //Styles import
 import 'semantic-ui-css/semantic.min.css';
