@@ -1,9 +1,9 @@
 <template>
     <sui-comment-group class="commentStyle">
-        <sui-comment >
+        <sui-comment>
             <sui-comment-avatar
                     v-if="commentData.userInfo.profile_picture"
-                    :src="commentData.userInfo.profile_picture"
+                    :src="this.$store.getters.BackEndURL + commentData.userInfo.profile_picture"
             />
 
             <sui-comment-content>
@@ -45,7 +45,7 @@
         props: {
             'comment-data': {
                 type: Object,
-                required:true
+                required: true
             },
 
         },
@@ -81,6 +81,7 @@
         },
         created() {
             this.commentData.publishDate = new Date(this.commentData.publishDate);
+            console.log(this.commentData.replys)
         }
     }
 </script>

@@ -74,6 +74,12 @@ export const store = new Vuex.Store({
         },
         CommentBackEndURL : state => {
             return state.backEndUrl + 'comment/'
+        },
+        BackEndURL :  state => {
+            return state.backEndUrl
+        },
+        MediaBackEndURL : state => {
+            return state.backEndUrl
         }
     }
 })
