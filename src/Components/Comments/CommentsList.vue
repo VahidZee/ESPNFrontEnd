@@ -5,11 +5,14 @@
             <!-- Comments -->
             <sui-comment-group
                     :style="commentListSizing"
-                    class="comment-list">
+                    class="comment-list"
+
+            >
                 <!-- Comment Cards -->
                 <comments-card v-for="(com , i) in comments"
                                :key="'comment-' + i "
                                :comment-data="com"
+                               @selectReply="commentSelectedToReply"
                 ></comments-card>
                 <!-- Load More Button -->
                 <sui-button @click="fetchData()"
@@ -41,10 +44,10 @@
 
             >
                 <sui-input
-                        placeholder="Add Comment"
+                        :placeholder="place_holder"
                         icon="send"
                         style="width: 100%"
-                        :value="comment_text"
+                        v-model="comment_text"
                 />
             </sui-form>
 
@@ -61,17 +64,22 @@
         name: "CommentsList",
         components: {CommentsCard},
         props: {
+
+            //Styling
             width: {
                 type: String,
                 default: '100vw'
             },
-            'background-image': {
-                type: String,
-            },
+
             height: {
                 type: String,
                 default: '30vh'
             },
+            'background-image': {
+                type: String,
+            },
+
+            //Field unification
             'field-type': {
                 type: String,
                 default: 'N',
@@ -84,18 +92,22 @@
         },
         data() {
             return {
+                //Comments
                 comments: [],
                 has_more: true,
                 page_number: 1,
-                comment_text: '',
 
+                //New Comment Fields
+                comment_text: '',
+                place_holder: 'Add a new comment',
+                selectedComment: null,
             }
         },
         methods: {
             //Fetching Data
             fetchData() {
                 let data = {};
-                if (this.$store.state.logged_in)
+                if (this.logged_in)
                     data['token'] = this.$store.state.token;
 
                 axios
@@ -105,7 +117,7 @@
                     )
                     .then(
                         response => {
-                            if( response.data.ok ) {
+                            if (response.data.ok) {
                                 this.has_more = response.data.has_more;
                                 this.comments = this.comments.concat(response.data.list);
                                 this.page_number++;
@@ -116,7 +128,51 @@
 
             },
             submitComment() {
-                //
+                let data = {
+                    text: this.comment_text,
+                };
+                if (this.logged_in)
+                    data['token'] = this.$store.state.token;
+                else
+                    return;
+                if (this.selectedComment)
+                    data['replyToID'] = this.selectedComment.id;
+
+                axios
+                    .post(
+                        this.$store.getters.CommentBackEndURL + 'submit/' + this.fieldId + '?type=' + this.fieldType
+                        , data
+                    )
+                    .then(
+                        response => {
+                            if (response.data.ok) {
+                                this.page_number = 1;
+                                this.comments = [];
+                                this.fetchData();
+                                this.place_holder = 'Add a new comment';
+                                this.comment_text = '';
+                            } else {
+                                console.log('Error While Submitting your Comment : ' +response.data.description);
+                            }
+                        }
+                    )
+            },
+            commentSelectedToReply(value) {
+                if (this.selectedComment)
+                    if (this.selectedComment.id === value.id) {
+                        this.selectedComment = null;
+                        this.place_holder = 'Add a new comment'
+                    } else {
+                        this.selectedComment = value;
+                        this.place_holder = 'Reply to ' + this.selectedComment.userInfo.username;
+                    }
+                else {
+                    this.selectedComment = value;
+                    this.place_holder = 'Reply to @' + this.selectedComment.userInfo.username;
+                }
+            },
+            commentUnselectedToReply() {
+                this.selectedComment = null;
             }
         },
         computed: {
@@ -127,19 +183,19 @@
             },
             logged_in() {
                 return this.$store.getters.is_logged_in
-            }
+            },
         },
-        watch:{
+        watch: {
             $route() {
                 this.page_number = 1;
                 this.comments = [];
                 this.fetchData();
             },
-            logged_in(){
+            logged_in() {
                 this.page_number = 1;
                 this.comments = [];
                 this.fetchData();
-            }
+            },
         },
         beforeMount() {
             this.fetchData();

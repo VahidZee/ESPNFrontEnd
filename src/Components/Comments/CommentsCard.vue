@@ -17,6 +17,7 @@
                         <sui-button
                                 is="sui-label"
                                 :disabled="!this.is_logged_in"
+                                @click="replyThisComment"
                         >
                             <sui-icon name="reply"/>
                             {{commentData.replies.length}}
@@ -27,6 +28,7 @@
                                 is="sui-label"
                                 :disabled="!this.is_logged_in"
                                 @click="toggleCommentLike"
+
                         >
                             <sui-icon
                                     name="heart"
@@ -42,6 +44,7 @@
                         v-for="( com , i ) in commentData.replies"
                         :key="'reply-' + commentData.id + '-' + i"
                         :comment-data="com"
+                        @selectReply="propogateCommentSelected"
                 ></comments-card>
             </sui-comment-group>
         </sui-comment>
@@ -110,6 +113,16 @@
 
                             }
                         )
+            },
+
+            replyThisComment() {
+                this.$emit('selectReply', this.commentData);
+            },
+            propogateCommentSelected(value) {
+
+
+                this.$emit('selectReply', value);
+
             }
         },
         filters: {
