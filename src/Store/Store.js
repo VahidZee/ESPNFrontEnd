@@ -17,6 +17,7 @@ export const store = new Vuex.Store({
         LOGGED_IN( state, token ) {
             state.token = token;
             state.logged_in = true;
+            console.log( token )
             let cred = {
                 'token': state.token
             };
@@ -70,8 +71,23 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
+        //User State
+        is_logged_in : state => {
+            return state.logged_in
+        },
+
+        //URLS
         NewsBackEndURL : state => {
             return state.backEndUrl + 'news/'
+        },
+        CommentBackEndURL : state => {
+            return state.backEndUrl + 'comment/'
+        },
+        BackEndURL :  state => {
+            return state.backEndUrl
+        },
+        MediaBackEndURL : state => {
+            return state.backEndUrl
         },
         PlayerBackEndURL: state => {
             return state.backEndUrl + 'games/player/'

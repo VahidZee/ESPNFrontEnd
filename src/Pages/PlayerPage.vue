@@ -6,7 +6,10 @@
             <Stats v-bind:stats=stats></Stats>
             <!--<PlayerNews news-image="url('Photos/news2.jpg')" name="Lionel Messi"></PlayerNews>-->
             <div style="margin: 5rem"></div>
-            <NewsList title="Player News"></NewsList>
+            <NewsList title="Player News"
+                type="related"
+                :related="[]"
+            ></NewsList>
             <!--<PlayerNews news-image="url('Photos/news.jpg')" name="Lebron James"></PlayerNews>-->
     </div>
 </template>

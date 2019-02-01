@@ -1,5 +1,5 @@
 <template>
-    <div class="newsList" :style="listStyle" :class="{ 'related' : related.length }">
+    <div class="newsList" :style="listStyle" :class="{ 'related' : this.type === 'related' }">
         <sui-menu class="controlBar" inverted vertical floated :class="{ 'related-menu' : related.length }">
             <!-- Menu Title -->
             <sui-menu-item class="controlBarHeader" header>
@@ -7,7 +7,7 @@
             </sui-menu-item>
 
             <!-- Related Tags -->
-            <sui-menu-item v-show="related.length" class="controlBarHeader" header>
+            <sui-menu-item v-show="type === 'related'" class="controlBarHeader" header>
                 Tags
                 <sui-icon name="long arrow alternate down"></sui-icon>
             </sui-menu-item>
@@ -22,7 +22,7 @@
 
             <!-- Control Options -->
             <sui-menu-item
-                    v-show="processControlsOptions.length && !related.length"
+                    v-show="processControlsOptions.length && !(type === 'related')"
                     v-for="(item, itemKey) in processControlsOptions"
                     :key="'controlItem' +itemKey"
                     @click="selectControl(item)"
@@ -34,7 +34,7 @@
 
             <!-- Filter Options -->
             <sui-dropdown
-                    v-show="filterOptions && !related.length"
+                    v-show="filterOptions && !(type === 'related')"
                     text="Filter"
                     item
                     labeled
@@ -46,7 +46,7 @@
         </sui-menu>
 
         <!-- View Port -->
-        <div class="viewPort" :class="{ 'related' : !related.length }">
+        <div class="viewPort" :class="{ 'related' : !(type === 'related') }">
             <!-- News Cards-->
             <NewsCard
                     v-for="post in shownPosts"
@@ -137,6 +137,11 @@
                 }
 
             },
+            'type':{
+                type: String,
+                default: 'Recent'
+            }
+
 
         },
         data() {
@@ -189,7 +194,7 @@
         methods: {
             //Data Filtering
             filtered(post) {
-                if (this.related.length)
+                if (this.type === 'related')
                     return true;
                 if (this.activeFilter === null)
                     return true;
@@ -203,7 +208,7 @@
                 if (this.$store.state.logged_in)
                     data['token'] = this.$store.state.token;
 
-                if (!this.related.length) {
+                if (this.type !== 'related') {
                     if (!tab)
                         tab = this.activeControl;
                     axios
@@ -275,7 +280,7 @@
         beforeMount() {
         },
         created() {
-            if (!this.related.length) {
+            if (this.type !== 'related') {
                 this.activeControl = this.defaultActive;
 
                 this.posts = {};
