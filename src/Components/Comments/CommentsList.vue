@@ -37,7 +37,7 @@
 
             <sui-form
                     @submit.prevent="submitComment"
-                    v-if="this.$store.getters.is_logged_in"
+                    v-if="this.logged_in"
 
             >
                 <sui-input
@@ -124,6 +124,21 @@
                 return {
                     maxHeight: this.height
                 }
+            },
+            logged_in() {
+                return this.$store.getters.is_logged_in
+            }
+        },
+        watch:{
+            $route() {
+                this.page_number = 1;
+                this.comments = [];
+                this.fetchData();
+            },
+            logged_in(){
+                this.page_number = 1;
+                this.comments = [];
+                this.fetchData();
             }
         },
         beforeMount() {

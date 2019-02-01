@@ -16,6 +16,7 @@ export const store = new Vuex.Store({
         LOGGED_IN( state, token ) {
             state.token = token;
             state.logged_in = true;
+            console.log( token )
             let cred = {
                 'token': state.token
             };
