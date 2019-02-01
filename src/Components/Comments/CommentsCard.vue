@@ -14,13 +14,24 @@
                 <sui-comment-text>{{commentData.text}}</sui-comment-text>
                 <sui-comment-actions>
                     <sui-comment-action>
-                        <sui-button is="sui-label">
-                            Reply
+                        <sui-button
+                                is="sui-label"
+                                :disabled="!this.is_logged_in"
+                        >
+                            <sui-icon name="reply"/>
+                            {{commentData.replies.length}}
                         </sui-button>
                     </sui-comment-action>
                     <sui-comment-action>
-                        <sui-button is="sui-label">
-                            <sui-icon name="heart"/>
+                        <sui-button
+                                is="sui-label"
+                                :disabled="!this.is_logged_in"
+                                @click="toggleCommentLike"
+                        >
+                            <sui-icon
+                                    name="heart"
+                                    :color="this.commentData.liked ? 'red' : 'grey'"
+                            />
                             {{commentData.likesCount}}
                         </sui-button>
                     </sui-comment-action>
@@ -39,6 +50,8 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "CommentsCard",
         components: {},
@@ -49,7 +62,38 @@
             },
 
         },
-        methods: {},
+        computed: {
+            is_logged_in(){
+                return this.$store.getters.is_logged_in;
+            }
+        },
+        methods: {
+            toggleCommentLike() {
+
+                if (!this.is_logged_in)
+                    return;
+                let data = {};
+                data['token'] = this.$store.state.token;
+
+                //Liking Comment
+                if(! this.commentData.liked)
+                    axios
+                        .post(
+                            this.$store.getters.CommentBackEndURL + 'like/' + this.commentData.id
+                            , data
+                        )
+                        .then(
+                            response => {
+                                if (response.data.ok) {
+                                    this.commentData.liked = true;
+                                    this.commentData.likesCount++;
+                                }
+
+                            }
+                        )
+
+            }
+        },
         filters: {
             formatDate(date) {
 
@@ -81,7 +125,6 @@
         },
         created() {
             this.commentData.publishDate = new Date(this.commentData.publishDate);
-            console.log(this.commentData.replys)
         }
     }
 </script>

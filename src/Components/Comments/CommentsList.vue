@@ -37,7 +37,7 @@
 
             <sui-form
                     @submit.prevent="submitComment"
-                    v-if="this.$store.state.logged_in"
+                    v-if="this.$store.getters.is_logged_in"
 
             >
                 <sui-input
@@ -109,7 +109,6 @@
                                 this.has_more = response.data.has_more;
                                 this.comments = this.comments.concat(response.data.list);
                                 this.page_number++;
-                                console.log(response.data)
                             }
 
                         }

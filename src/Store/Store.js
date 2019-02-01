@@ -69,6 +69,12 @@ export const store = new Vuex.Store({
         }
     },
     getters: {
+        //User State
+        is_logged_in : state => {
+            return state.logged_in
+        },
+
+        //URLS
         NewsBackEndURL : state => {
             return state.backEndUrl + 'news/'
         },
