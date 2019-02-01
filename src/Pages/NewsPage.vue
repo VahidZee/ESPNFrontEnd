@@ -1,38 +1,44 @@
 <template>
     <div class="newsPage">
         <div v-if="newsData">
-            <div class="content-container " style="position: sticky;top:5px">
+
+            <!-- Title -->
+            <div  class="content-container " style="position: sticky;top:5px">
                 <sui-container text>
-                    <div>
-                        <h2 class="content-header">
+                    <div >
+                        <h2 class="content-header" >
                             {{newsData.title}}
                         </h2>
                         <span class="content-header-info">
 
-                        <sui-icon shape="circular" name="calendar alternate outline icon"></sui-icon>
+                        <sui-icon shape="circular" name="calendar alternate outline icon" ></sui-icon>
                         {{ newsData.publishDate | formatDate}}
-                        <sui-label v-show="newsData.isSubscribed" size="tiny" color="black">
+                        <sui-label v-show="newsData.isSubscribed" size="tiny" color="black" >
                             Subscribed
                         </sui-label>
                     </span>
                     </div>
                 </sui-container>
             </div>
-            <div class="content-container content-header">
+
+            <!-- Tags -->
+            <div  class="content-container content-header">
                 <sui-container text v-show="newsData.tags.length">
-                <span>
+                <span  >
                     Tags :
                 </span>
 
                     <router-link
                             v-for="(tag , i ) in newsData.tags"
                             :key="'tag' + i"
-                            :to="'/' + tag.type + '/' + tag.id"
+                            :to="'/' + tagType(tag.type) + '/' + tag.id"
                     >
-                        <sui-button size="tiny" :content="tag.title" :color="tagColor(tag.type)" style="margin: 2px"/>
+                        <sui-button size="tiny" :content="tag.title" :color="tagColor(tag.type)" style="margin: 2px" />
                     </router-link>
                 </sui-container>
             </div>
+
+            <!-- Images -->
             <divider
                     v-show="newsData.images.length"
                     height="2vh"
@@ -64,7 +70,9 @@
                     height="4vh"
                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
-            <div class="content-container">
+
+            <!-- Content -->
+            <div class="content-container" >
                 <sui-container text>
                     <p
                             v-for="(text, i ) in newsData.paragraphs"
@@ -74,12 +82,14 @@
                     </p>
                 </sui-container>
             </div>
+
+            <!-- Resources -->
             <divider height="2vh"
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
-            <div class="content-container content-header">
+            <div  class="content-container content-header">
                 <sui-container text v-show="newsData.tags.length">
-                <span>
+                <span  >
                     Resources :
                 </span>
 
@@ -88,23 +98,25 @@
                             :key="'rec' + i"
                             :href="rec.link"
                     >
-                        <sui-button size="tiny" :content="rec.title" style="margin: 2px;"/>
+                        <sui-button size="tiny" :content="rec.title" style="margin: 2px;"  />
                     </a>
                 </sui-container>
             </div>
-            <divider height="2vh"
-                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+            <divider  height="2vh"
+                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
 
             />
 
+            <!-- Comments -->
             <comments-list></comments-list>
             <divider type="top" height="2vh"
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
 
-            <news-list title="Related News"
-                       :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
-                       :related="newsData.tags"
+            <!-- Related News -->
+            <news-list  title="Related News"
+                        :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
+                        :related="newsData.tags"
             ></news-list>
 
             <divider
@@ -113,6 +125,13 @@
                     :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />
         </div>
+
+        <sui-message
+            v-if="error_message"
+            color="red"
+        >
+            {{ error_message }}
+        </sui-message>
     </div>
 </template>
 
@@ -125,55 +144,56 @@
     export default {
         name: "NewsPage",
         components: {CommentsList, NewsList, Divider},
-        data() {
+        data () {
             return {
-                newsData: null,
+                newsData : null,
                 slide: 0,
-                sliding: null
+                error_message:'',
             }
         },
         props: {
-            'background-image': {
-                type: String,
-                default: "url('./Images/'"
+            'background-image' : {
+                type : String ,
+                default : "url('./Images/'"
             }
         },
         methods: {
             //Fetching Data
             fetchData() {
-                // this.newsData = this.generateData()
                 axios
                     .get(this.$store.getters.NewsBackEndURL + this.$route.params.id)
                     .then(response => {
                         let temp = response.data;
-                        temp.publishDate = new Date(temp.publishDate);
+                        temp.publishDate = new Date( temp.publishDate );
                         this.newsData = temp;
                     })
                     .catch(error => {
-                        //TODO 404
-                        console.log(error)
-                        // this.errored = true
+                        this.error_message = 'News Was Not Found'
                     })
             },
+
             //Styling
-            tagColor(tagType) {
-                if (tagType === 'P')
+            tagColor( tagType ) {
+                if( tagType === 'P')
                     return 'blue';
-                if (tagType === 'T')
+                if( tagType === 'T')
                     return 'green';
-                if (tagType === 'G')
+                if( tagType === 'G')
                     return 'red';
                 return 'black'
             },
-            tagNames() {
-                let arr = [];
-                for (let shit in this.newsData.tags)
-                    arr.push[shit.title];
-                return arr;
+            tagType( tagType ) {
+                if( tagType === 'P')
+                    return 'player';
+                if( tagType === 'T')
+                    return 'team';
+                if( tagType === 'G')
+                    return 'game';
+                return 'league'
             },
         },
         filters: {
-            formatDate(date) {
+            formatDate( date ) {
                 let monthNames = [
                     "Jan", "Feb", "Mar",
                     "Apr", "May", "Jun", "Jul",
@@ -191,7 +211,7 @@
             this.fetchData()
         },
         watch: {
-            $route() {
+            $route( ) {
                 this.fetchData();
             }
         }
@@ -199,24 +219,21 @@
 </script>
 
 <style>
-    .newsPage {
+    .newsPage{
         position: static;
         top: 5px;
     }
-
-    .content-container {
+    .content-container{
         width: 100vw;
         text-align: justify;
         padding: 10px;
     }
-
-    .content-header {
+    .content-header{
         font-style: italic;
         font-weight: bolder;
         display: inline-block;
     }
-
-    .content-header-info {
+    .content-header-info{
         float: right;
     }
 </style>

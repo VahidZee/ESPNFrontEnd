@@ -1,22 +1,29 @@
 <template>
     <div class="newsList" :style="listStyle" :class="{ 'related' : related.length }">
         <sui-menu class="controlBar" inverted vertical floated :class="{ 'related-menu' : related.length }">
+            <!-- Menu Title -->
             <sui-menu-item class="controlBarHeader" header>
                 {{ title }}
             </sui-menu-item>
+
+            <!-- Related Tags -->
             <sui-menu-item v-show="related.length" class="controlBarHeader" header>
                 Tags
                 <sui-icon name="long arrow alternate down"></sui-icon>
             </sui-menu-item>
             <sui-menu-item
-                    v-for="(item, itemKey) in related"
+                    v-for="(item, itemKey) in relatedDictList"
                     :key="'tag' +itemKey"
+                    :active="item.active"
+                    @click="toggleTag(item)"
             >
-                {{item.title}}
+                {{item.tag.title}}
             </sui-menu-item>
+
+            <!-- Control Options -->
             <sui-menu-item
-                    v-show="controlOptions.length && !related.length"
-                    v-for="(item, itemKey) in controlOptions"
+                    v-show="processControlsOptions.length && !related.length"
+                    v-for="(item, itemKey) in processControlsOptions"
                     :key="'controlItem' +itemKey"
                     @click="selectControl(item)"
                     :active="isActive(item)"
@@ -24,6 +31,8 @@
             >
                 {{item}}
             </sui-menu-item>
+
+            <!-- Filter Options -->
             <sui-dropdown
                     v-show="filterOptions && !related.length"
                     text="Filter"
@@ -33,19 +42,38 @@
                     :options="filterOptions"
             >
             </sui-dropdown>
-            <sui-menu-item float="bottom">
-                <sui-button @click="fetchData()">
-                    Load More
-                </sui-button>
-            </sui-menu-item>
+
         </sui-menu>
+
+        <!-- View Port -->
         <div class="viewPort" :class="{ 'related' : !related.length }">
+            <!-- News Cards-->
             <NewsCard
-                    v-for="post in posts"
+                    v-for="post in shownPosts"
                     :key="post.id"
                     :news-data="post"
                     v-show="filtered(post)"
             ></NewsCard>
+
+            <!-- Load More Button -->
+            <sui-button @click="fetchData()"
+                        style="margin: 50px"
+                        v-if="has_more"
+                        color="black"
+                        size="huge"
+            >
+                Load More
+            </sui-button>
+
+            <!-- No More Items Found Message -->
+            <sui-message
+                    v-if="!has_more"
+                    style="margin: 50px"
+                    size="huge"
+                    color="black"
+            >
+                No more items were found!
+            </sui-message>
         </div>
     </div>
 
@@ -67,10 +95,10 @@
                 type: String,
                 required: true
             },
-            'control-options': {
+            'control-options-dict': {
                 type: Array,
                 default: () => {
-                    return ['Recent', 'Subscribed'];
+                    return [{name: 'Recent', needsAuth: false}, {name: 'Subscribed', needsAuth: true}];
                 }
             },
             'default-active': {
@@ -102,10 +130,6 @@
                 }
 
             },
-            'auth': {
-                type: Boolean,
-                default: false
-            },
             'related': {
                 type: Array,
                 default: function () {
@@ -119,8 +143,14 @@
             return {
                 activeControl: this.defaultActive,
                 activeFilter: null,
-                posts: [],
-                pageNumber: 1
+                posts: {},
+                shownPosts: [],
+                controlsData: {},
+
+                relatedDictList: [],
+                // Fetch Data Fields
+                has_more: false,
+                pageNumber: 1,
             }
         },
 
@@ -135,55 +165,141 @@
                     backgroundPosition: 'center'
                 }
             },
-
+            processControlsOptions() {
+                let controlOptions = []
+                for (let i = 0; i < this.controlOptionsDict.length; i++) {
+                    if (!this.controlOptionsDict[i].needsAuth)
+                        controlOptions.push(this.controlOptionsDict[i].name);
+                    else if (this.$store.state.logged_in)
+                        controlOptions.push(this.controlOptionsDict[i].name);
+                }
+                return controlOptions
+            },
+            activeTags() {
+                let activeTags = [];
+                for (let i = 0; i < this.relatedDictList.length; i++) {
+                    if (this.relatedDictList[i].active)
+                        activeTags.push(this.relatedDictList[i].tag)
+                }
+                return activeTags;
+            }
         },
 
         //Methods
         methods: {
             //Data Filtering
             filtered(post) {
-                if (this.activeFilter === null && (this.activeControl === 'Recent'))
+                if (this.related.length)
                     return true;
-                if (this.activeFilter === null && !(this.activeControl === 'Recent'))
-                    return post.isSubscribed;
-                if (!(this.activeFilter === null) && (this.activeControl === 'Recent'))
+                if (this.activeFilter === null)
+                    return true;
+                if (!(this.activeFilter === null))
                     return this.activeFilter === post.sportType;
-                return this.activeFilter === post.sportType && post.isSubscribed;
+            },
+
+            //Data Fetching
+            fetchData(tab) {
+                let data = {};
+                if (this.$store.state.logged_in)
+                    data['token'] = this.$store.state.token;
+
+                if (!this.related.length) {
+                    if (!tab)
+                        tab = this.activeControl;
+                    axios
+                        .post(
+                            this.$store.getters.NewsBackEndURL + '?type=' + tab.toLowerCase() + '&page=' + this.controlsData[tab].pageNumber
+                            , data
+                        )
+                        .then(
+                            response => {
+                                this.controlsData[tab].pageNumber++;
+                                this.controlsData[tab].has_more = response.data.has_more;
+                                this.has_more = response.data.has_more;
+                                for (let i = 0; i < response.data.list.length; i++) {
+                                    let temp = response.data.list[i];
+                                    temp.publishDate = new Date(temp.publishDate);
+                                    temp.sportType = (temp.sportType === 'F') ? 'Football' : 'Basketball';
+                                    this.posts[tab].push(temp)
+                                }
+                            }
+                        )
+                } else {
+                    data['tags'] = this.activeTags;
+                    axios
+                        .post(
+                            this.$store.getters.NewsBackEndURL + '?type=related&page=' + this.pageNumber,
+                            data
+                        )
+                        .then(
+                            response => {
+                                this.pageNumber++;
+                                this.has_more = response.data.has_more;
+                                for (let i = 0; i < response.data.list.length; i++) {
+                                    let temp = response.data.list[i];
+                                    temp.publishDate = new Date(temp.publishDate);
+                                    temp.sportType = (temp.sportType === 'F') ? 'Football' : 'Basketball';
+                                    this.shownPosts.push(temp)
+                                }
+                            }
+                        )
+                }
 
             },
-            //Data Fetching
-            fetchData() {
-                axios
-                    .get(
-                        this.$store.getters.NewsBackEndURL + '?type=recent&page=' + this.pageNumber++
-                    )
-                    .then(
-                        response => {
-                            for (let i = 0; i < response.data.length; i++) {
-                                let temp = response.data[i]
-                                temp.publishDate = new Date(temp.publishDate);
-                                temp.sportType = (temp.sportType == 'F') ? 'Football' : 'Basketball';
-                                this.posts.push(temp)
-                            }
-                        }
-                    )
-            },
+
             //ControlBar Methods
             selectControl(item) {
-                if (item === 'Subscribed')
-                    this.activeControl = (this.auth) ? item : this.activeControl;
-                else
-                    this.activeControl = item;
+                this.activeControl = item;
+                this.shownPosts = this.posts[this.activeControl];
+                this.has_more = this.controlsData[item].has_more;
             },
             isActive(name) {
                 return this.activeControl === name;
             },
+
+            toggleTag(tag) {
+                tag.active = !tag.active;
+                this.pageNumber = 1;
+                this.shownPosts = [];
+                this.fetchData()
+            }
+        },
+
+        // Watch list
+        watch: {
+            processControlsOptions() {
+            },
         },
 
         //Events
+        beforeMount() {
+        },
         created() {
-            this.fetchData()
-        }
+            if (!this.related.length) {
+                this.activeControl = this.defaultActive;
+
+                this.posts = {};
+                for (let i = 0; i < this.controlOptionsDict.length; i++) {
+                    this.posts[this.controlOptionsDict[i].name] = [];
+                    this.controlsData[this.controlOptionsDict[i].name] = {
+                        pageNumber: 1,
+                        has_more: true
+                    }
+                }
+
+
+                this.fetchData();
+                this.selectControl(this.defaultActive);
+            } else {
+                for (let i = 0; i < this.related.length; i++)
+                    this.relatedDictList.push({
+                        tag: this.related[i],
+                        active: true
+                    });
+                this.fetchData();
+            }
+
+        },
     }
 </script>
 
