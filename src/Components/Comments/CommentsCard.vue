@@ -76,7 +76,7 @@
                 data['token'] = this.$store.state.token;
 
                 //Liking Comment
-                // if (!this.commentData.liked)
+                if (!this.commentData.liked)
                     axios
                         .post(
                             this.$store.getters.CommentBackEndURL + 'like/' + this.commentData.id
@@ -88,12 +88,28 @@
                                     this.commentData.liked = true;
                                     this.commentData.likesCount++;
                                 } else {
-                                    console.log(response.data.description)
+                                    console.log('Comment Like Error : ' + response.data.description)
+                                }
+
+                            }
+                        );
+                else
+                    axios
+                        .post(
+                            this.$store.getters.CommentBackEndURL + 'unlike/' + this.commentData.id
+                            , data
+                        )
+                        .then(
+                            response => {
+                                if (response.data.ok) {
+                                    this.commentData.liked = false;
+                                    this.commentData.likesCount--;
+                                } else {
+                                    console.log('Comment unlike Error : ' + response.data.description)
                                 }
 
                             }
                         )
-
             }
         },
         filters: {
