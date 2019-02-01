@@ -108,7 +108,10 @@
             />
 
             <!-- Comments -->
-            <comments-list></comments-list>
+            <comments-list
+                    :field-id="this.$route.params.id"
+                    field-type="N"
+            />
             <divider type="top" height="2vh"
                      :background-image="'url(\'' + this.newsData.backgroundImage + '\')'"
             />

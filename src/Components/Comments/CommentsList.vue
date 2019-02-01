@@ -2,22 +2,49 @@
     <div>
         <sui-container text style="margin: 10px;">
             <h3 is="sui-header" style="padding: 10px 0px" dividing> {{'Comments ' + comments.length}}</h3>
-            <sui-comment-group :style="commentListSizing" class="comment-list">
-                <div></div>
+            <!-- Comments -->
+            <sui-comment-group
+                    :style="commentListSizing"
+                    class="comment-list">
+                <!-- Comment Cards -->
                 <comments-card v-for="(com , i) in comments"
                                :key="'comment-' + i "
                                :comment-data="com"
                 ></comments-card>
+                <!-- Load More Button -->
+                <sui-button @click="fetchData()"
+                            style="margin:30px 0;"
+                            v-if="has_more"
+                            color="black"
+                            size="small"
+                            fluid
+                >
+                    Load More
+                </sui-button>
+
+                <!-- No More Items Found Message -->
+                <sui-message
+                        v-if="!has_more"
+                        style="margin: 50px;text-align: center"
+                        size="small"
+                        color="black"
+
+                        fluid
+                >
+                    No more items were found!
+                </sui-message>
             </sui-comment-group>
 
             <sui-form
                     @submit.prevent="submitComment"
                     v-if="this.$store.state.logged_in"
+
             >
                 <sui-input
                         placeholder="Add Comment"
                         icon="send"
                         style="width: 100%"
+                        :value="comment_text"
                 />
             </sui-form>
 
@@ -28,6 +55,7 @@
 
 <script>
     import CommentsCard from "./CommentsCard";
+    import axios from 'axios'
 
     export default {
         name: "CommentsList",
@@ -44,42 +72,48 @@
                 type: String,
                 default: '30vh'
             },
-            type: {
+            'field-type': {
                 type: String,
                 default: 'N',
+            },
+            'field-id': {
+                type: String,
+                required: true,
             }
+
         },
         data() {
             return {
-                comments: []
+                comments: [],
+                has_more: true,
+                page_number: 1,
+                comment_text: '',
+
             }
         },
         methods: {
-            generateData(i = 1, level = 1) {
-                let lorem = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias aliquam consectetur explicabo facere facilis in inventore nihil quod temporibus velit? A accusamus ad consequuntur deserunt dolores harum reprehenderit! Eos, nostrum.\n';
-                let randNumber = Math.floor((Math.random() * 313) + 1) % 3;
-                if (level === 4)
-                    return null;
-                let obj = {
-                    id: i,
-                    userName: 'User-' + Math.floor((Math.random() * 313) + 1) % 45,
-                    userPicture: '../Images/bg' + Math.floor((Math.random() * 313) + 1) % 45 + '.jpeg',
-                    publishDate: new Date(),
-                    text: (i % 3 === 1) ? lorem + lorem : (i % 3) ? lorem + lorem + lorem : lorem,
-                    likesCount: Math.floor((Math.random() * 313) + 1),
-                    liked: false,
-                    replies: []
-                };
-                for (let x = 1; x <= randNumber; x++) {
-                    let temp = this.generateData(i, level + 1)
-                    if (temp)
-                        obj.replies.push(temp);
-
-                }
-                return obj;
-            },
             //Fetching Data
             fetchData() {
+                let data = {};
+                if (this.$store.state.logged_in)
+                    data['token'] = this.$store.state.token;
+
+                axios
+                    .post(
+                        this.$store.getters.CommentBackEndURL + this.fieldId + '?type=' + this.fieldType + '&page=' + this.page_number
+                        , data
+                    )
+                    .then(
+                        response => {
+                            if( response.data.ok ) {
+                                this.has_more = response.data.has_more;
+                                this.comments = this.comments.concat(response.data.list);
+                                this.page_number++;
+                                console.log(response.data)
+                            }
+
+                        }
+                    )
 
             },
             submitComment() {

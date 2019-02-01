@@ -71,6 +71,9 @@ export const store = new Vuex.Store({
     getters: {
         NewsBackEndURL : state => {
             return state.backEndUrl + 'news/'
+        },
+        CommentBackEndURL : state => {
+            return state.backEndUrl + 'comment/'
         }
     }
 })
