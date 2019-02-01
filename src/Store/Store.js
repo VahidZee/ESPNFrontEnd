@@ -10,7 +10,8 @@ export const store = new Vuex.Store({
         user_has_info:false,
         token: '',
         user: null,
-        backEndUrl: 'http://localhost:8000/'
+        // backEndUrl: 'http://localhost:8000/'
+        backEndUrl: 'http://127.0.0.1:8000/'
     },
     mutations: {
         LOGGED_IN( state, token ) {
@@ -71,6 +72,15 @@ export const store = new Vuex.Store({
     getters: {
         NewsBackEndURL : state => {
             return state.backEndUrl + 'news/'
+        },
+        PlayerBackEndURL: state => {
+            return state.backEndUrl + 'games/player/'
+        },
+        TeamBackEndURL: state => {
+            return state.backEndUrl + 'games/team/'
+        },
+        GameBackEndURL: state => {
+            return state.backEndUrl + 'games/game/'
         }
     }
 })

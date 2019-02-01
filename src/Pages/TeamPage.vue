@@ -12,6 +12,8 @@
     import NewsList from "../Components/News/NewsList";
     import GamesList from "../Components/Games/GamesList";
     import TeamPlayers from "../Components/TeamPlayers/TeamPlayers";
+    import axios from 'axios'
+
     export default {
         name: "TeamPage",
         components: {TeamPlayers, GamesList, NewsList},
@@ -25,6 +27,7 @@
                 axios.post(this.$store.getters.NewsBackEndURL + this.$route.params.id)
                     .then(response => {
                         this.response = response.data;
+                        console.log(this.response)
                     })
                     .catch(error => {
                         //TODO 404

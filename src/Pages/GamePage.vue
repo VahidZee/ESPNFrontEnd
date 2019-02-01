@@ -169,7 +169,18 @@
 
             //Data Fetch
             fetchData() {
-                this.gameData = this.generateData();
+                // this.gameData = this.generateData();
+                axios.get(this.$store.getters.GameBackEndURL + this.$route.params.id)
+                    .then(response => {
+                        console.log(response)
+                        let res = response.data
+                        best
+                    })
+                    .catch(error => {
+                        //TODO 404
+                        console.log(error)
+                        // this.errored = true
+                    })
             },
             getTags() {
                 let arr = [];

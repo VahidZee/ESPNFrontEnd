@@ -8,9 +8,9 @@
                 <td style="width: 70%">
                     <table class="ProfileInfo">
                         <tr>
-                            <th class="ProfileName" colspan="3">{{response.name}}</th>
+                            <th class="ProfileName" colspan="3">{{name}}</th>
                         </tr>
-                       <div></div>
+                        <div></div>
                         <tr style="font-size: 18px">
                             <!--<td style="border-right: thin #b2b2b2 solid; padding: 0 2%">10 Forward</td>-->
                             <!--<td style="border-right: thin #b2b2b2 solid; padding: 0 2%">5'6", 148 lbs</td>-->
@@ -38,7 +38,7 @@
 <script>
     export default {
         name: "FootProfile",
-        props: {photoN: String , photoP: String, name: String},
+        props: {photoN: String, photoP: String, name: String, response: Object},
         computed: {
             imgN: function () {
                 return {

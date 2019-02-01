@@ -34,6 +34,7 @@ w<template>
 
 <script>
     export default {
+        props: {stats: Array},
         name: "Stats"
     }
 </script>

@@ -1,6 +1,7 @@
 <template>
     <div :style="backgroundHandle">
-            <ProfilePlayer photo-n="url('/Photos/BG2.jpg')" v-bind:photo-p="url(image)" v-bind:player="response"></ProfilePlayer>
+            <ProfilePlayer photo-n="url('/Photos/BG2.jpg')" photo-p="url('/Photos/BG2.jpg')"
+                           v-bind:response="response" :name="name"></ProfilePlayer>
             <!--<ProfilePlayer photo-n="url('/Photos/BG.jpg')" photo-p="url('Photos/profile.png')" name="LeBron James"></ProfilePlayer>-->
             <Stats v-bind:stats=stats></Stats>
             <!--<PlayerNews news-image="url('Photos/news2.jpg')" name="Lionel Messi"></PlayerNews>-->
@@ -17,6 +18,8 @@
     import PlayerNews from "../Components/PlayerNews/PlayerNews";
     import NewsList from "../Components/News/NewsList";
     import Divider from "../Components/PageDivider/Divider";
+    import axios from 'axios'
+
     export default {
         name: "PlayerPage",
         components: {NewsList, PlayerNews, Stats, ProfilePlayer},
@@ -24,9 +27,10 @@
             return {
                 id : 1,
                 backgroundImage: "url('/Images/bg36.jpeg')",
-                response: "",
+                response: {},
                 image: "",
-                stats: "",
+                stats: [],
+                name: ""
             }
         },
 
@@ -45,10 +49,13 @@
 
         methods: {
             getPlayerData() {
-                axios.post(this.$store.getters.NewsBackEndURL + this.$route.params.id)
+                console.log(this.$store.getters.PlayerBackEndURL + this.$route.params.id)
+                axios.get(this.$store.getters.PlayerBackEndURL + this.$route.params.id).catch(r => console.log('shit ', r))
                     .then(response => {
-                        this.response = response.data;
+                        console.log(response)
+                        this.response = response.data
                         this.stats = this.response.stats
+                        this.name = this.response.name
                         this.image = '/Photos/' + this.response.image
                     })
                     .catch(error => {
