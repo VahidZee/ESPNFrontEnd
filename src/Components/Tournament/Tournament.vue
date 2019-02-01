@@ -2,7 +2,7 @@
     <div class="whole cnt" :style="backgroundHandle">
         <div class="item">
             <div class="item-parent">
-                <TourCell team-f="Team1" team-s="Team2" score-f="3" score-s="4"></TourCell>
+                <TourCell team-f="{{}}" team-s="Team2" score-f="3" score-s="4"></TourCell>
             </div>
             <div class="item-childrens">
                 <div class="item-child">

@@ -6,11 +6,11 @@
         <sui-grid :columns="2">
             <sui-grid-row>
                 <sui-grid-column :width="4">
-                    <GameTable background-image="url('/Images/bg3.jpeg')"></GameTable>
-                    <MatchTable background-image="url('/Images/bg3.jpeg')"></MatchTable>
+                    <GameTable v-bind:teams="teams" background-image="url('/Images/bg3.jpeg')"></GameTable>
+                    <MatchTable v-bind:matches="matches" background-image="url('/Images/bg3.jpeg')"></MatchTable>
                 </sui-grid-column>
                 <sui-grid-column :width="10">
-                    <Tournament background-image="url('/Images/bg3.jpeg')"></Tournament>
+                    <Tournament v-bind:tour="tournament" background-image="url('/Images/bg3.jpeg')"></Tournament>
                 </sui-grid-column>
             </sui-grid-row>
         </sui-grid>
@@ -30,7 +30,8 @@
                id: 1,
                j: null,
                matches: null,
-               teams: null
+               teams: null,
+               tournament: null
            }
         },
         methods: {
@@ -39,13 +40,18 @@
                     .then(res => {
                         let json_res = res.json()
                         this.matches = json_res.matches
+                        this.teams = json_res.teams
+                        this.tournament = json_res.tournament
                     })
                     .catch(err => {
                         console.log(err)
                     })
 
             }
-        }
+        },
+        beforeMount() {
+            this.getLeague()
+        },
     }
 
 

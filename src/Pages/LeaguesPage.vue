@@ -38,16 +38,9 @@
             </sui-button>
         </div>
         <div class="league">
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
-            <LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>
+            <LeagueCard v-for="league in leagues" v-bind:league-name="league.name" v-bind:message="league.status"
+                        v-bind:date="league.date" v-bind:link="league.id"></LeagueCard>
+            <!--<LeagueCard league-name="league Name" message="Finished" date="97/12/12" link=""></LeagueCard>-->
             <sui-card>
                 <sui-card-content>
                     <sui-card-header>Finished</sui-card-header>
@@ -64,7 +57,28 @@
 
     export default {
         name: "LeaguesPage",
-        components: {Divider, LeagueCard}
+        components: {Divider, LeagueCard},
+        data() {
+            return {
+                leagues: null
+            }
+        },
+        methods: {
+            getLeaguesData() {
+                axios.post(this.$store.getters.NewsBackEndURL + this.$route.params.id)
+                    .then(response => {
+                        this.leagues = response.data;
+                    })
+                    .catch(error => {
+                        //TODO 404
+                        console.log(error)
+                        // this.errored = true
+                    })
+            },
+        },
+        beforeMount() {
+            this.getLeaguesData()
+        },
     }
 </script>
 
