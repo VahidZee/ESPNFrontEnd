@@ -5,7 +5,10 @@
             <Stats v-bind:stats=stats></Stats>
             <!--<PlayerNews news-image="url('Photos/news2.jpg')" name="Lionel Messi"></PlayerNews>-->
             <div style="margin: 5rem"></div>
-            <NewsList title="Player News"></NewsList>
+            <NewsList title="Player News"
+                type="related"
+                :related="[]"
+            ></NewsList>
             <!--<PlayerNews news-image="url('Photos/news.jpg')" name="Lebron James"></PlayerNews>-->
     </div>
 </template>
@@ -17,6 +20,9 @@
     import PlayerNews from "../Components/PlayerNews/PlayerNews";
     import NewsList from "../Components/News/NewsList";
     import Divider from "../Components/PageDivider/Divider";
+    import axios from 'axios'
+
+
     export default {
         name: "PlayerPage",
         components: {NewsList, PlayerNews, Stats, ProfilePlayer},
@@ -44,19 +50,7 @@
         },
 
         methods: {
-            getPlayerData() {
-                axios.post(this.$store.getters.NewsBackEndURL + this.$route.params.id)
-                    .then(response => {
-                        this.response = response.data;
-                        this.stats = this.response.stats
-                        this.image = '/Photos/' + this.response.image
-                    })
-                    .catch(error => {
-                        //TODO 404
-                        console.log(error)
-                        // this.errored = true
-                    })
-            },
+
         },
         beforeMount() {
             this.getPlayerData()
